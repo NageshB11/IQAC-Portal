@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import AdminSidebar from '@/components/dashboard/admin-sidebar'
 import DashboardOverview from '@/components/dashboard/admin/dashboard-overview'
@@ -16,6 +16,14 @@ import ActivityLogsManagement from '@/components/dashboard/admin/activity-logs'
 import DocumentsManagement from '@/components/dashboard/admin/documents-management'
 
 export default function AdminDashboard() {
+  return (
+    <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
+      <AdminDashboardContent />
+    </Suspense>
+  )
+}
+
+function AdminDashboardContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState('overview')

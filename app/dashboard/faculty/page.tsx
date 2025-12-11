@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import FacultySidebar from '@/app/components/dashboard/faculty-sidebar'
 import FacultyOverview from '@/app/components/dashboard/faculty/overview'
@@ -13,6 +13,14 @@ import DepartmentMembers from '@/app/components/dashboard/faculty/department-mem
 import Announcements from '@/app/components/dashboard/faculty/announcements'
 
 export default function FacultyDashboard() {
+  return (
+    <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
+      <FacultyDashboardContent />
+    </Suspense>
+  )
+}
+
+function FacultyDashboardContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState('overview')

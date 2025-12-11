@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import StudentSidebar from '@/app/components/dashboard/student-sidebar'
 import StudentOverview from '@/app/components/dashboard/student/overview'
@@ -12,6 +12,14 @@ import Achievements from '@/app/components/dashboard/student/achievements'
 import StudentProfile from '@/app/components/dashboard/student/profile'
 
 export default function StudentDashboard() {
+  return (
+    <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
+      <StudentDashboardContent />
+    </Suspense>
+  )
+}
+
+function StudentDashboardContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState('overview')

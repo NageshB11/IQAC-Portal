@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import CoordinatorSidebar from '@/app/components/dashboard/coordinator-sidebar'
 import CoordinatorOverview from '@/app/components/dashboard/coordinator/overview'
@@ -15,6 +15,14 @@ import StudentActivitiesView from '@/app/components/dashboard/coordinator/studen
 import GenerateReport from '@/app/components/dashboard/coordinator/generate-report'
 
 export default function CoordinatorDashboard() {
+  return (
+    <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
+      <CoordinatorDashboardContent />
+    </Suspense>
+  )
+}
+
+function CoordinatorDashboardContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState('overview')
