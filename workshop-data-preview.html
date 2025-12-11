@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshop/Seminar/Conference Data Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            border-left: 4px solid #667eea;
+        }
+        
+        .stat-card h3 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+        
+        .stat-card p {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .filters {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filters label {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .filters select {
+            padding: 10px 15px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            background: white;
+        }
+        
+        .table-container {
+            padding: 30px;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .dept-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .dept-civil { background: #e74c3c; }
+        .dept-computer { background: #3498db; }
+        .dept-it { background: #9b59b6; }
+        .dept-mechanical { background: #e67e22; }
+        .dept-ece { background: #1abc9c; }
+        .dept-eee { background: #f39c12; }
+        
+        .type-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        
+        .type-workshop { background: #e3f2fd; color: #1976d2; }
+        .type-seminar { background: #f3e5f5; color: #7b1fa2; }
+        .type-conference { background: #e8f5e9; color: #388e3c; }
+        
+        .url-link {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.85em;
+        }
+        
+        .url-link:hover {
+            text-decoration: underline;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Workshop/Seminar/Conference Data Preview</h1>
+            <p>Organized data with department mapping for 2023-24</p>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <h3 id="totalCount">0</h3>
+                <p>Total Events</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="workshopCount">0</h3>
+                <p>Workshops</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="seminarCount">0</h3>
+                <p>Seminars</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="participantCount">0</h3>
+                <p>Total Participants</p>
+            </div>
+        </div>
+        
+        <div class="filters">
+            <label>Filter by Department:</label>
+            <select id="deptFilter">
+                <option value="all">All Departments</option>
+                <option value="Civil Engineering">Civil Engineering</option>
+                <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                <option value="Electronics & Communication Engineering">ECE</option>
+                <option value="Electrical & Electronics Engineering">EEE</option>
+            </select>
+            
+            <label>Filter by Type:</label>
+            <select id="typeFilter">
+                <option value="all">All Types</option>
+                <option value="workshop">Workshop</option>
+                <option value="seminar">Seminar</option>
+                <option value="conference">Conference</option>
+            </select>
+        </div>
+        
+        <div class="table-container">
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Year</th>
+                        <th>Event Name</th>
+                        <th>Type</th>
+                        <th>Department</th>
+                        <th>Participants</th>
+                        <th>Date</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const workshopData = [
+            {
+                year: "2023-24",
+                name: "Concrete Mix Design Workshop",
+                type: "workshop",
+                department: "Civil Engineering",
+                participants: 107,
+                dateFrom: "22.05.2024",
+                dateTo: "22.05.2024",
+                url: "https://mgmcen.ac.in/civil-engineering/departmental-activity.html"
+            },
+            {
+                year: "2023-24",
+                name: "Two Days Hands-on Workshop on Front-end Development",
+                type: "workshop",
+                department: "Computer Science & Engineering",
+                participants: 70,
+                dateFrom: "26-27 Feb 2024",
+                dateTo: "26-27 Feb 2024",
+                url: "https://mgmcen.ac.in/computer-science-engineering/departmental-activity.html"
+            },
+            {
+                year: "2023-24",
+                name: "Two-Days Hands-on Workshop on Machine Learning using Python",
+                type: "workshop",
+                department: "Computer Science & Engineering",
+                participants: 64,
+                dateFrom: "1-2 March 2024",
+                dateTo: "1-2 March 2024",
+                url: "https://mgmcen.ac.in/computer-science-engineering/departmental-activity.html"
+            },
+            {
+                year: "2023-24",
+                name: "One-Day Hands-on Workshop on Git and GitHub",
+                type: "workshop",
+                department: "Computer Science & Engineering",
+                participants: 70,
+                dateFrom: "03.04.2024",
+                dateTo: "03.04.2024",
+                url: "https://mgmcen.ac.in/computer-science-engineering/departmental-activity.html"
+            },
+            {
+                year: "2023-24",
+                name: "A Live Online Session on 'Getting Jobs and Internship in the Domain of AI Development'",
+                type: "seminar",
+                department: "Computer Science & Engineering",
+                participants: 232,
+                dateFrom: "15.05.2024",
+                dateTo: "15.05.2024",
+                url: "https://mgmcen.ac.in/computer-science-engineering/departmental-activity.html"
+            },
+            {
+                year: "2023-24",
+                name: "Two-days Hands-on Workshop on Data Analytics with Python",
+                type: "workshop",
+                department: "Computer Science & Engineering",
+                participants: 68,
+                dateFrom: "16- 17 May 2024",
+                dateTo: "16- 17 May 2024",
+                url: "https://mgmcen.ac.in/computer-science-engineering/departmental-activity.html"
+            },
+            {
+                year: "2023-24",
+                name: "An Online Workshop on 'Intellectual Property Rights'",
+                type: "workshop",
+                department: "Computer Science & Engineering",
+                participants: 80,
+                dateFrom: "17.05.2024",
+                dateTo: "17.05.2024",
+                url: "https://mgmcen.ac.in/computer-science-engineering/departmental-activity.html"
+            },
+            {
+                year: "2023-24",
+                name: "Network Programming using Python by Mr. Malhar Lathkar",
+                type: "workshop",
+                department: "Computer Science & Engineering",
+                participants: 130,
+                dateFrom: "17- 18 May 2024",
+                dateTo: "17- 18 May 2024",
+                url: "https://mgmcen.ac.in/computer-science-engineering/departmental-activity.html"
+            },
+            {
+                year: "2023-24",
+                name: "Two days workshop on Advanced Internet of Things conducted by Innovians Technologies in association with IIT, Varanasi",
+                type: "workshop",
+                department: "Computer Science & Engineering",
+                participants: 51,
+                dateFrom: "20- 21May 2024",
+                dateTo: "20- 21May 2024",
+                url: "https://mgmcen.ac.in/computer-science-engineering/departmental-activity.html"
+            },
+            {
+                year: "2023-24",
+                name: "Seminar on Women Empowerment",
+                type: "seminar",
+                department: "Information Technology",
+                participants: 240,
+                dateFrom: "07.03.2024",
+                dateTo: "07.03.2024",
+                url: "https://mgmcen.ac.in/information-technology/departmental-activity.html"
+            },
+            {
+                year: "2023-24",
+                name: "Workshop on Employability skills",
+                type: "workshop",
+                department: "Information Technology",
+                participants: 60,
+                dateFrom: "13.04.2024",
+                dateTo: "13.04.2024",
+                url: "https://mgmcen.ac.in/information-technology/departmental-activity.html"
+            },
+            {
+                year: "2023-24",
+                name: "Seminar on on GATE Exam Preparation by Mr. Modh. Shahab from ACE Engineering Academy Hyderabad",
+                type: "seminar",
+                department: "Mechanical Engineering",
+                participants: 35,
+                dateFrom: "16-08-2024",
+                dateTo: "16-08-2024",
+                url: "http://mgmcen.ac.in/mechanical-engineering/mesa.aspx"
+            },
+            {
+                year: "2023-24",
+                name: "Seminar on on ' MPSC Preparation ' Dy. Director, Directorate of Account and Treasuries, Finance Department, Government of Maharashtra",
+                type: "seminar",
+                department: "Mechanical Engineering",
+                participants: 65,
+                dateFrom: "04-05-2024",
+                dateTo: "04-05-2024",
+                url: "http://mgmcen.ac.in/mechanical-engineering/mesa.aspx"
+            },
+            {
+                year: "2023-24",
+                name: "Seminar on ' Advance Manufacturing ' by Mr.Rohit Vadgaonkar The managing Director, Urvil Steels, Nanded",
+                type: "seminar",
+                department: "Mechanical Engineering",
+                participants: 80,
+                dateFrom: "29-02-2024",
+                dateTo: "29-02-2024",
+                url: "http://mgmcen.ac.in/mechanical-engineering/mesa.aspx"
+            },
+            {
+                year: "2023-24",
+                name: "Seminar on 'IIOT Application' by Dr. Santosh Choudhary, HOD Mechanical engineering Department, Govt. polytechnic, Nanded",
+                type: "seminar",
+                department: "Mechanical Engineering",
+                participants: 75,
+                dateFrom: "24-02-2024",
+                dateTo: "24-02-2024",
+                url: "http://mgmcen.ac.in/mechanical-engineering/mesa.aspx"
+            },
+            {
+                year: "2023-24",
+                name: "Introduction for Automotive Steel in Industry by Mr. Atul Bhalerao, Divisional Mager, JCAPCPL Jamshedpur",
+                type: "seminar",
+                department: "Mechanical Engineering",
+                participants: 70,
+                dateFrom: "19-02-2024",
+                dateTo: "19-02-2024",
+                url: "http://mgmcen.ac.in/mechanical-engineering/mesa.aspx"
+            },
+            {
+                year: "2023-24",
+                name: "Workshop on 'Internet of Things'",
+                type: "workshop",
+                department: "Electronics & Communication Engineering",
+                participants: 74,
+                dateFrom: "20-21 May 2024",
+                dateTo: "20-21 May 2024",
+                url: "http://www.mgmcen.ac.in/pdFECT%20dept%20-%20Activity%202.pdf"
+            },
+            {
+                year: "2023-24",
+                name: "Two day workshop on Machine Learning Concepts using Python programming",
+                type: "workshop",
+                department: "Electronics & Communication Engineering",
+                participants: 74,
+                dateFrom: "20-21 March 2024",
+                dateTo: "20-21 March 2024",
+                url: "http://www.mgmcen.ac.in/pdFECT%20dept%20-%20Activity%202.pdf"
+            },
+            {
+                year: "2023-24",
+                name: "Workshop on 'How to start a Start-up'",
+                type: "workshop",
+                department: "Electronics & Communication Engineering",
+                participants: 178,
+                dateFrom: "24-04-2024",
+                dateTo: "24-04-2024",
+                url: "http://www.mgmcen.ac.in/pdFECT%20dept%20-%20Activity%202.pdf"
+            },
+            {
+                year: "2023-24",
+                name: "Insights on CLoud Security: Intel Corporation Workshop",
+                type: "workshop",
+                department: "Computer Science & Engineering",
+                participants: 90,
+                dateFrom: "16.10.2023",
+                dateTo: "16.10.2023",
+                url: "https://mgmcen.ac.in/computer-science-engineering/departmental-activity.html"
+            },
+            {
+                year: "2023-24",
+                name: "Webinar on Hanshake with NLP",
+                type: "seminar",
+                department: "Computer Science & Engineering",
+                participants: 115,
+                dateFrom: "24.11.2023",
+                dateTo: "24.11.2023",
+                url: "https://mgmcen.ac.in/computer-science-engineering/departmental-activity.html"
+            },
+            {
+                year: "2023-24",
+                name: "Two days workshop on Internet of Things conducted by Innovians Technologies in association with IIT, Varanasi",
+                type: "workshop",
+                department: "Computer Science & Engineering",
+                participants: 57,
+                dateFrom: "15-16 Sept 2023",
+                dateTo: "15-16 Sept 2023",
+                url: "https://mgmcen.ac.in/computer-science-engineering/departmental-activity.html"
+            },
+            {
+                year: "2023-24",
+                name: "Hands-On Generative AI Workshop",
+                type: "workshop",
+                department: "Computer Science & Engineering",
+                participants: 312,
+                dateFrom: "24.08.2023",
+                dateTo: "24.08.2023",
+                url: "https://mgmcen.ac.in/computer-science-engineering/csi.aspx"
+            },
+            {
+                year: "2023-24",
+                name: "Seminar on ' PLM- Product Life Cycle Management ' by Mt.Siraj Khan",
+                type: "seminar",
+                department: "Mechanical Engineering",
+                participants: 45,
+                dateFrom: "13-12-2023",
+                dateTo: "13-12-2023",
+                url: "http://mgmcen.ac.in/mechanical-engineering/mesa.aspx"
+            },
+            {
+                year: "2023-24",
+                name: "Seminar on ' Robotics and Digitalization in manufacturing ' by Mr.Ashish Kamble from L&T Edu",
+                type: "seminar",
+                department: "Mechanical Engineering",
+                participants: 53,
+                dateFrom: "07-09-2023",
+                dateTo: "07-09-2023",
+                url: "http://mgmcen.ac.in/mechanical-engineering/mesa.aspx"
+            },
+            {
+                year: "2023-24",
+                name: "Seminar on ' Green Energy System ' by Mr.Ashish Kamble from L&T Edu",
+                type: "seminar",
+                department: "Mechanical Engineering",
+                participants: 48,
+                dateFrom: "07-09-2023",
+                dateTo: "07-09-2023",
+                url: "http://mgmcen.ac.in/mechanical-engineering/mesa.aspx"
+            },
+            {
+                year: "2023-24",
+                name: "' Metal forming and analysis ' by Dr. Sachin Waigaonkar, Professor in Department of Mechanical Engineering at BITS Pilani K. K. Birla",
+                type: "seminar",
+                department: "Mechanical Engineering",
+                participants: 65,
+                dateFrom: "28-10-2023",
+                dateTo: "28-10-2023",
+                url: "http://mgmcen.ac.in/mechanical-engineering/mesa.aspx"
+            },
+            {
+                year: "2023-24",
+                name: "Seminar on ' Career Opportunities for Mechanical, Computer and Electronic Engineer in Software, Electronics oil refinery's companies' by Mr. Santosh Kulkarni,Sr. Engineer & Data Scientist, ABB Bangalore",
+                type: "seminar",
+                department: "Mechanical Engineering",
+                participants: 85,
+                dateFrom: "02-12-2023",
+                dateTo: "02-12-2023",
+                url: "http://mgmcen.ac.in/mechanical-engineering/mesa.aspx"
+            },
+            {
+                year: "2023-24",
+                name: "Online webinar on ' importance of Millets ' by Food and Agriculture Organisation, Government of India",
+                type: "seminar",
+                department: "Mechanical Engineering",
+                participants: 95,
+                dateFrom: "29-11-2023",
+                dateTo: "29-11-2023",
+                url: "http://mgmcen.ac.in/mechanical-engineering/mesa.aspx"
+            },
+            {
+                year: "2023-24",
+                name: "Seminar on ' Composite Materials ' by Dr. Sachin Waigaonkar, Professor in Department of Mechanical Engineering at BITS Pilani K. K. Birla",
+                type: "seminar",
+                department: "Mechanical Engineering",
+                participants: 55,
+                dateFrom: "07-12-2023",
+                dateTo: "07-12-2023",
+                url: "http://mgmcen.ac.in/mechanical-engineering/mesa.aspx"
+            },
+            {
+                year: "2023-24",
+                name: "One week Workshop on Applications of Arduino Board",
+                type: "workshop",
+                department: "Electronics & Communication Engineering",
+                participants: 66,
+                dateFrom: "30 - 05 Oct 2023",
+                dateTo: "30 - 05 Oct 2023",
+                url: "http://www.mgmcen.ac.in/pdFECT%20dept%20-%20Activity%202.pdf"
+            }
+        ];
+
+        let filteredData = [...workshopData];
+
+        function getDeptClass(dept) {
+            if (dept.includes('Civil')) return 'dept-civil';
+            if (dept.includes('Computer')) return 'dept-computer';
+            if (dept.includes('Information')) return 'dept-it';
+            if (dept.includes('Mechanical')) return 'dept-mechanical';
+            if (dept.includes('Electronics')) return 'dept-ece';
+            if (dept.includes('Electrical')) return 'dept-eee';
+            return 'dept-civil';
+        }
+
+        function getTypeClass(type) {
+            return `type-${type}`;
+        }
+
+        function updateStats() {
+            const totalCount = filteredData.length;
+            const workshopCount = filteredData.filter(d => d.type === 'workshop').length;
+            const seminarCount = filteredData.filter(d => d.type === 'seminar').length;
+            const participantCount = filteredData.reduce((sum, d) => sum + d.participants, 0);
+
+            document.getElementById('totalCount').textContent = totalCount;
+            document.getElementById('workshopCount').textContent = workshopCount;
+            document.getElementById('seminarCount').textContent = seminarCount;
+            document.getElementById('participantCount').textContent = participantCount.toLocaleString();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            if (filteredData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="no-data">No data matches the selected filters</td></tr>';
+                return;
+            }
+
+            filteredData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${item.year}</td>
+                    <td><strong>${item.name}</strong></td>
+                    <td><span class="type-badge ${getTypeClass(item.type)}">${item.type.toUpperCase()}</span></td>
+                    <td><span class="dept-badge ${getDeptClass(item.department)}">${item.department}</span></td>
+                    <td>${item.participants}</td>
+                    <td>${item.dateFrom}</td>
+                    <td><a href="${item.url}" target="_blank" class="url-link">View Link</a></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function applyFilters() {
+            const deptFilter = document.getElementById('deptFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+
+            filteredData = workshopData.filter(item => {
+                const deptMatch = deptFilter === 'all' || item.department === deptFilter;
+                const typeMatch = typeFilter === 'all' || item.type === typeFilter;
+                return deptMatch && typeMatch;
+            });
+
+            updateStats();
+            renderTable();
+        }
+
+        document.getElementById('deptFilter').addEventListener('change', applyFilters);
+        document.getElementById('typeFilter').addEventListener('change', applyFilters);
+
+        // Initial render
+        updateStats();
+        renderTable();
+    </script>
+</body>
+</html>
