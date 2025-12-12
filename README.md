@@ -109,65 +109,20 @@ A comprehensive web-based portal for managing and tracking faculty activities, s
 
 ```
 iqacportalproject1/
-├── app/                          # Next.js frontend
-│   ├── components/              # React components
-│   │   ├── auth/               # Authentication components
-│   │   ├── dashboard/          # Dashboard components
-│   │   │   ├── admin/         # Admin-specific components
-│   │   │   ├── coordinator/   # Coordinator-specific components
-│   │   │   ├── faculty/       # Faculty-specific components
-│   │   │   └── student/       # Student-specific components
-│   │   ├── navbar.tsx         # Navigation bar
-│   │   └── theme-provider.tsx # Theme management
-│   ├── utils/                  # Utility functions
-│   ├── layout.tsx              # Root layout
-│   ├── page.tsx                # Home page
-│   └── globals.css             # Global styles
+├── frontend/                     # Next.js frontend
+│   ├── app/                      # Next.js app directory
+│   ├── components/               # React components
+│   ├── public/                   # Static assets
+│   ├── styles/                   # Global styles
+│   └── package.json              # Frontend dependencies
 │
-├── server/                      # Backend server
-│   ├── models/                 # Mongoose models
-│   │   ├── User.js
-│   │   ├── Department.js
-│   │   ├── FacultyActivity.js
-│   │   ├── StudentFeedback.js
-│   │   └── Timetable.js
-│   ├── routes/                 # API routes
-│   │   ├── auth.js            # Authentication routes
-│   │   ├── faculty-activities.js
-│   │   ├── reports.js         # PDF reports
-│   │   ├── excel-reports.js   # Excel reports
-│   │   ├── downloads.js       # File downloads
-│   │   └── admin.js           # Admin routes
-│   ├── middleware/             # Custom middleware
-│   │   └── auth.js            # JWT authentication
-│   ├── utils/                  # Utility functions
-│   │   └── activityLogger.js  # Activity logging
-│   ├── scripts/                # Database scripts
-│   │   └── init-db.js         # Database initialization
-│   ├── seed-*.js              # Data seeding scripts
-│   ├── server.js              # Main server file
-│   └── package.json           # Backend dependencies
+├── backend/                      # Express backend
+│   ├── models/                   # Mongoose models
+│   ├── routes/                   # API routes
+│   ├── server.js                 # Main server file
+│   └── package.json              # Backend dependencies
 │
-├── lib/                        # Shared libraries
-│   └── utils.ts               # Utility functions
-│
-├── hooks/                      # Custom React hooks
-│   ├── use-toast.ts
-│   └── use-mobile.ts
-│
-├── styles/                     # Additional styles
-│   └── globals.css
-│
-├── public/                     # Static assets
-│
-├── .env.example               # Environment variables template
-├── .gitignore                 # Git ignore rules
-├── package.json               # Frontend dependencies
-├── tsconfig.json              # TypeScript configuration
-├── tailwind.config.js         # Tailwind CSS configuration
-├── next.config.js             # Next.js configuration
 └── README.md                  # This file
-```
 
 ---
 
@@ -184,26 +139,28 @@ git clone https://github.com/YOUR_USERNAME/iqac-portal.git
 cd iqac-portal
 ```
 
-### **Step 2: Install Frontend Dependencies**
+### **Step 2: Install Backend Dependencies**
 ```bash
+cd backend
 npm install
+cd ..
 ```
 
-### **Step 3: Install Backend Dependencies**
+### **Step 3: Install Frontend Dependencies**
 ```bash
-cd server
+cd frontend
 npm install
 cd ..
 ```
 
 ### **Step 4: Set Up Environment Variables**
 
-**Frontend (.env.local):**
+**Frontend (frontend/.env.local):**
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:5000
 ```
 
-**Backend (server/.env):**
+**Backend (backend/.env):**
 ```env
 MONGODB_URI=mongodb://localhost:27017/iqac-portal
 JWT_SECRET=your-super-secret-jwt-key-min-32-characters
@@ -213,7 +170,7 @@ NODE_ENV=development
 
 ### **Step 5: Initialize Database**
 ```bash
-cd server
+cd backend
 
 # Create departments and coordinators
 node seed-departments-coordinators.js
@@ -232,12 +189,13 @@ node create-admin.js
 
 **Terminal 1 - Backend:**
 ```bash
-cd server
+cd backend
 npm start
 ```
 
 **Terminal 2 - Frontend:**
 ```bash
+cd frontend
 npm run dev
 ```
 
@@ -332,7 +290,6 @@ After running seed scripts, you'll have:
 - Set environment variables
 - Deploy
 
-**📖 Detailed Guide:** See [DEPLOYMENT_GUIDE_COMPLETE.md](./DEPLOYMENT_GUIDE_COMPLETE.md)
 
 ---
 

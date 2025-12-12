@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: iqac-portal-backend
+    env: node
+    root: backend # This points to the backend folder
+    plan: free # Use free tier
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+    # The following keys must be added manually in the Render Dashboard:
+    # - MONGODB_URI (Connection string from MongoDB Atlas)
+    # - JWT_SECRET (A long random string)

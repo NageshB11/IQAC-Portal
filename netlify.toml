@@ -1,0 +1,11 @@
+[build]
+  base = "frontend"
+  command = "npm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[context.production.environment]
+  NODE_ENV = "production"
+  # You will need to add NEXT_PUBLIC_API_URL in Netlify Site Settings
