@@ -43,7 +43,7 @@ export const downloadResearchDocument = async (publicationId: string, title: str
         return { success: false, error: 'Not authenticated' };
     }
 
-    const url = `http://localhost:5000/api/downloads/research/${publicationId}/download`;
+    const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/downloads/research/${publicationId}/download`;
     const filename = `${title.substring(0, 50)}_document.pdf`;
 
     return await downloadFile(url, filename, token);
@@ -56,7 +56,7 @@ export const downloadPDCertificate = async (pdId: string, title: string) => {
         return { success: false, error: 'Not authenticated' };
     }
 
-    const url = `http://localhost:5000/api/downloads/professional-development/${pdId}/download`;
+    const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/downloads/professional-development/${pdId}/download`;
     const filename = `${title.substring(0, 50)}_certificate.pdf`;
 
     return await downloadFile(url, filename, token);
@@ -69,7 +69,7 @@ export const downloadEventReport = async (eventId: string, eventName: string) =>
         return { success: false, error: 'Not authenticated' };
     }
 
-    const url = `http://localhost:5000/api/downloads/events/${eventId}/download-report`;
+    const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/downloads/events/${eventId}/download-report`;
     const filename = `${eventName.substring(0, 50)}_report.pdf`;
 
     return await downloadFile(url, filename, token);
@@ -82,7 +82,7 @@ export const downloadInstitutionalEventReport = async (eventId: string, eventNam
         return { success: false, error: 'Not authenticated' };
     }
 
-    const url = `http://localhost:5000/api/downloads/institutional-events/${eventId}/download`;
+    const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/downloads/institutional-events/${eventId}/download`;
     const filename = `${eventName.substring(0, 50)}_report.pdf`;
 
     return await downloadFile(url, filename, token);
@@ -95,7 +95,7 @@ export const downloadDocument = async (documentId: string, title: string) => {
         return { success: false, error: 'Not authenticated' };
     }
 
-    const url = `http://localhost:5000/api/documents/${documentId}/download`;
+    const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/documents/${documentId}/download`;
     const filename = `${title.substring(0, 50)}_document.pdf`;
 
     return await downloadFile(url, filename, token);

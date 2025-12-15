@@ -63,10 +63,10 @@ export default function GenerateReport() {
                 let fileExtension = ''
 
                 if (format === 'pdf') {
-                    url = `http://localhost:5000/api/reports/generate?${queryParams}`
+                    url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/reports/generate?${queryParams}`
                     fileExtension = 'pdf'
                 } else if (format === 'excel') {
-                    url = `http://localhost:5000/api/excel-reports/generate-excel?${queryParams}`
+                    url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/excel-reports/generate-excel?${queryParams}`
                     fileExtension = 'xlsx'
                 }
 

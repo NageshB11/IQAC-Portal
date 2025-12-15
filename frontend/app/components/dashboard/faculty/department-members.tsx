@@ -27,7 +27,7 @@ export default function DepartmentMembers() {
     const fetchMembers = async () => {
         try {
             const token = localStorage.getItem('token')
-            const response = await fetch('http://localhost:5000/api/users/department-members', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/users/department-members`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

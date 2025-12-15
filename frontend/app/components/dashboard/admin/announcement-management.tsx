@@ -17,7 +17,7 @@ export default function AnnouncementManagement() {
     const fetchAnnouncements = async () => {
         try {
             const token = localStorage.getItem('token')
-            const response = await fetch('http://localhost:5000/api/announcements/all', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/announcements/all`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -48,7 +48,7 @@ export default function AnnouncementManagement() {
                 payload.department = department
             }
 
-            const response = await fetch('http://localhost:5000/api/announcements/create', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/announcements/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -37,22 +37,22 @@ export default function FacultyOverview() {
       const userData = JSON.parse(localStorage.getItem('user') || '{}')
 
       // Fetch faculty activity statistics
-      const activityResponse = await fetch('http://localhost:5000/api/faculty-activities/statistics', {
+      const activityResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/statistics`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
 
       // Fetch user's documents
-      const docsResponse = await fetch(`http://localhost:5000/api/documents/user/${userData._id}`, {
+      const docsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/documents/user/${userData._id}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
 
       // Fetch department members
-      const membersResponse = await fetch('http://localhost:5000/api/users/department-members', {
+      const membersResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/users/department-members`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
 
       // Fetch recent research publications
-      const researchResponse = await fetch('http://localhost:5000/api/faculty-activities/research', {
+      const researchResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/research`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
 

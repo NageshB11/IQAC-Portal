@@ -21,7 +21,7 @@ export default function FacultyActivitiesView() {
     const fetchStatistics = async () => {
         try {
             const token = localStorage.getItem('token')
-            const response = await fetch('http://localhost:5000/api/faculty-activities/statistics', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/statistics`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
             if (response.ok) {
@@ -44,7 +44,7 @@ export default function FacultyActivitiesView() {
                 workshops: '/institutional-events'
             }
 
-            const url = `http://localhost:5000/api/faculty-activities${endpoints[category]}`;
+            const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities${endpoints[category]}`;
             console.log('🔍 Fetching activities:', category);
             console.log('  URL:', url);
             console.log('  Has token:', !!token);

@@ -38,27 +38,27 @@ export default function CoordinatorOverview() {
       const token = localStorage.getItem('token')
 
       // Fetch department members (faculty and students)
-      const membersRes = await fetch('http://localhost:5000/api/users/department-members', {
+      const membersRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/users/department-members`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
 
       // Fetch students
-      const studentsRes = await fetch('http://localhost:5000/api/users/department-students', {
+      const studentsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/users/department-students`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
 
       // Fetch department documents
-      const docsRes = await fetch('http://localhost:5000/api/documents/department', {
+      const docsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/documents/department`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
 
       // Fetch feedback
-      const feedbackRes = await fetch('http://localhost:5000/api/feedback/all', {
+      const feedbackRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/feedback/all`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
 
       // Fetch faculty activities statistics
-      const activitiesRes = await fetch('http://localhost:5000/api/faculty-activities/statistics', {
+      const activitiesRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/statistics`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
 

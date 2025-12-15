@@ -30,7 +30,7 @@ export default function SignupPage() {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/departments')
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/departments`)
         const data = await response.json()
         setDepartments(data)
       } catch (err) {
@@ -78,7 +78,7 @@ export default function SignupPage() {
         payload.phoneNumber = formData.phoneNumber
       }
 
-      const response = await fetch('http://localhost:5000/api/auth/signup', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/auth/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

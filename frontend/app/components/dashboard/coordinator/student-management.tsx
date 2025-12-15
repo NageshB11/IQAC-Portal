@@ -20,7 +20,7 @@ export default function StudentManagement() {
         try {
             const token = localStorage.getItem('token')
 
-            const response = await fetch('http://localhost:5000/api/users/department-students', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/users/department-students`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

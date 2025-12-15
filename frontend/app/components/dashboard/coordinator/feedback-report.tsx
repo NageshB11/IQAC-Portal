@@ -33,7 +33,7 @@ export default function FeedbackReport() {
       const token = localStorage.getItem('token')
       const user = JSON.parse(localStorage.getItem('user') || '{}')
 
-      const response = await fetch('http://localhost:5000/api/feedback/all', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/feedback/all`, {
         headers: { Authorization: `Bearer ${token}` },
       })
 

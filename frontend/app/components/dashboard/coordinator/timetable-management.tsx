@@ -65,7 +65,7 @@ export default function TimetableManagement() {
     const fetchTimetables = async () => {
         try {
             const token = localStorage.getItem('token')
-            const response = await fetch('http://localhost:5000/api/timetable', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/timetable`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
 
@@ -144,8 +144,8 @@ export default function TimetableManagement() {
         try {
             const token = localStorage.getItem('token')
             const url = selectedTimetable
-                ? `http://localhost:5000/api/timetable/${selectedTimetable._id}`
-                : 'http://localhost:5000/api/timetable/create'
+                ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/timetable/${selectedTimetable._id}`
+                : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/timetable/create`
 
             const method = selectedTimetable ? 'PUT' : 'POST'
 

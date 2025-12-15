@@ -285,6 +285,341 @@ After running seed scripts, you'll have:
 - Deploy
 
 **3. Frontend - Vercel (Free)**
+how can i run this project
+
+
+Thought for 2s
+
+
+
+
+Analyzed
+1tcejorplatropcaqi\potkseD\evirDenO\hsegaN\sresU\:c
+
+Thought for <1s
+
+
+
+
+Analyzed
+package.json#L1-21
+Analyzed
+package.json#L1-84
+Analyzed
+package.json#L1-32
+
+Thought for 3s
+
+
+
+
+
+
+Analyzed
+dnekcab\1tcejorplatropcaqi\potkseD\evirDenO\hsegaN\sresU\:c
+Analyzed
+dnetnorf\1tcejorplatropcaqi\potkseD\evirDenO\hsegaN\sresU\:c
+Analyzed
+DEPLOYMENT_GUIDE.md#L1-89
+dont give me files gieve me only cmd on chat
+
+
+Thought for 8s
+
+
+
+
+
+
+
+
+
+
+To run the project, you need to open two separate terminals (one for the backend and one for the frontend) and run the following commands:
+
+Terminal 1: Backend
+powershell
+cd backend
+npm install
+npm run dev
+Terminal 2: Frontend
+powershell
+cd frontend
+npm install
+npm run dev
+The backend will typically run on port 5000 (or similar), and the frontend will run on http://localhost:3000.
+
+i want host backend to on the render so make changes accordingly and push on github then tell me ow to host
+
+
+Thought for 5s
+
+
+
+
+
+
+Analyzed
+server.js#L1-137
+Analyzed
+render.yaml#L1-17
+Searched
+*api*
+70 results
+Searched
+.env*
+0 results
+
+Thought Process
+
+
+
+
+
+
+
+
+Access to file
+.env.local
+is prohibited by
+.gitignore
+
+Thought for <1s
+
+
+
+
+…\iqacportalproject1 > git status
+
+PS C:\Users\Nagesh\OneDrive\Desktop\iqacportalproject1>   
+PS C:\Users\Nagesh\OneDrive\Desktop\iqacportalproject1> cd 'c:\Users\Nagesh\OneDrive\Desktop\iqacportalproject1'    
+PS C:\Users\Nagesh\OneDrive\Desktop\iqacportalproject1> git status
+On branch main
+Your branch is up to date wit
+
+
+
+                            mit -a") add" and/or "git comm
+        package.json
+Go to Terminal
+·
+Exit code 0
+
+Always Proceed
+Searched
+NEXT_PUBLIC_API_URL
+0 results
+Searched
+http://localhost:5000
+102 results
+
+Thought for 27s
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+…\iqacportalproject1 > Get-ChildItem -Path frontend -Recurse -File | Select-String -Pattern "http://localhost:5000" -List | ForEach-Object { $_.Path }
+
+C:\Users\Nagesh\OneDrive\Desk
+
+
+
+
+
+
+
+                            .ts\app\utils\downloadHelpers.
+C:\Users\Nagesh\OneDrive\Desk
+Go to Terminal
+·
+Exit code 1
+
+Always Proceed
+
+Thought for <1s
+
+
+Checked command status
+
+Thought for 2s
+
+
+
+
+…\iqacportalproject1 > Get-ChildItem -Path frontend -Recurse -File | Where-Object { $_.FullName -notmatch "node_modules" -and $_.FullName -notmatch "\\.next" } | Select-String -Pattern "http://localhost:5000" -List | ForEach-Object { $_.Path }
+
+C:\Users\Nagesh\OneDrive\Desk
+
+
+
+
+
+
+
+                            .ts\app\utils\downloadHelpers.
+C:\Users\Nagesh\OneDrive\Desk
+Go to Terminal
+·
+Exit code 0
+
+Always Proceed
+
+Thought for <1s
+
+
+Checked command status
+
+Thought for 3s
+
+
+
+
+…\iqacportalproject1 > Get-ChildItem -Path frontend -Recurse -Include *.tsx,*.ts,*.js | Where-Object { $_.FullName -notmatch "node_modules" -and $_.FullName -notmatch "\\.next" } | Select-String -Pattern "http://localhost:5000" -List | Select-Object -ExpandProperty Path > files_to_edit.txt
+
+Go to Terminal
+·
+Exit code 0
+
+Always Proceed
+
+Thought for <1s
+
+
+Checked command status
+
+Thought for <1s
+
+
+…\iqacportalproject1 > type files_to_edit.txt
+
+C:\Users\Nagesh\OneDrive\Desk
+
+
+
+
+
+
+
+                            .ts\app\utils\downloadHelpers.
+C:\Users\Nagesh\OneDrive\Desk
+Go to Terminal
+·
+Exit code 0
+
+Always Proceed
+
+Thought for <1s
+
+
+Checked command status
+
+Thought for 31s
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Edited
+update_api_url.js
++83
+-0
+
+Thought for <1s
+
+
+…\iqacportalproject1 > node update_api_url.js
+
+Starting Update...
+Updated: C:\Users\Nagesh\OneD
+
+
+
+
+
+
+                            adHelpers.ts\app\utils\downloa
+Done.ed: C:\Users\Nagesh\OneD
+Updated: C:\Users\Nagesh\OneD
+Go to Terminal
+·
+Exit code 0
+
+Always Proceed
+
+Thought for <1s
+
+
+Checked command status
+
+Thought for 1s
+
+
+
+
+…\iqacportalproject1 > del update_api_url.js files_to_edit.txt
+
+Ran background terminal command
+Relocate
+·
+Exit code 1
+
+Always Proceed
+Analyzed
+downloadHelpers.ts#L1-103
+
+Thought for 4s
+
+
+
+
+
+
+
+
+Analyzed
+next.config.mjs#L1-12
+
+Thought for <1s
+
+
+
+
+…\iqacportalproject1 > git ad
 - Sign up at https://vercel.com
 - Import GitHub repository
 - Set environment variables

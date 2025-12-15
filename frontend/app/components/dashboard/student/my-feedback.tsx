@@ -27,7 +27,7 @@ export default function MyFeedback() {
         const user = JSON.parse(localStorage.getItem('user') || '{}')
 
         const response = await fetch(
-          `http://localhost:5000/api/feedback/student/${user._id}`,
+          `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/feedback/student/${user._id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

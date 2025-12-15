@@ -50,7 +50,7 @@ export default function ResearchPublications() {
   const fetchPublications = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('http://localhost:5000/api/faculty-activities/research', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/research`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
       if (response.ok) {
@@ -89,8 +89,8 @@ export default function ResearchPublications() {
 
     try {
       const url = editingId
-        ? `http://localhost:5000/api/faculty-activities/research/${editingId}`
-        : 'http://localhost:5000/api/faculty-activities/research'
+        ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/research/${editingId}`
+        : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/research`
 
       const response = await fetch(url, {
         method: editingId ? 'PUT' : 'POST',
@@ -121,7 +121,7 @@ export default function ResearchPublications() {
 
     const token = localStorage.getItem('token')
     try {
-      const response = await fetch(`http://localhost:5000/api/faculty-activities/research/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/research/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       })

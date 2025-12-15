@@ -35,7 +35,7 @@ export default function StudentOverview() {
 
       // Fetch student's feedback
       const feedbackRes = await fetch(
-        `http://localhost:5000/api/feedback/student/${userData._id}`,
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/feedback/student/${userData._id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -43,7 +43,7 @@ export default function StudentOverview() {
 
       // Fetch student's documents
       const docsRes = await fetch(
-        `http://localhost:5000/api/documents/user/${userData._id}`,
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/documents/user/${userData._id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -51,7 +51,7 @@ export default function StudentOverview() {
 
       // Fetch announcements
       const announcementsRes = await fetch(
-        'http://localhost:5000/api/announcements/my-announcements',
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/announcements/my-announcements`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

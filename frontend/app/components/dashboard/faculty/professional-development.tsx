@@ -41,7 +41,7 @@ export default function ProfessionalDevelopment() {
     const fetchActivities = async () => {
         try {
             const token = localStorage.getItem('token')
-            const response = await fetch('http://localhost:5000/api/faculty-activities/professional-development', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/professional-development`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
             if (response.ok) {
@@ -70,8 +70,8 @@ export default function ProfessionalDevelopment() {
 
         try {
             const url = editingId
-                ? `http://localhost:5000/api/faculty-activities/professional-development/${editingId}`
-                : 'http://localhost:5000/api/faculty-activities/professional-development'
+                ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/professional-development/${editingId}`
+                : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/professional-development`
 
             const response = await fetch(url, {
                 method: editingId ? 'PUT' : 'POST',
@@ -93,7 +93,7 @@ export default function ProfessionalDevelopment() {
 
         const token = localStorage.getItem('token')
         try {
-            const response = await fetch(`http://localhost:5000/api/faculty-activities/professional-development/${id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/professional-development/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             })

@@ -74,7 +74,7 @@ export default function ActivityLogsManagement() {
             if (startDate) params.append('startDate', startDate);
             if (endDate) params.append('endDate', endDate);
 
-            const response = await fetch(`http://localhost:5000/api/activity-logs?${params}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/activity-logs?${params}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -101,7 +101,7 @@ export default function ActivityLogsManagement() {
             if (startDate) params.append('startDate', startDate);
             if (endDate) params.append('endDate', endDate);
 
-            const response = await fetch(`http://localhost:5000/api/activity-logs/stats?${params}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/activity-logs/stats?${params}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

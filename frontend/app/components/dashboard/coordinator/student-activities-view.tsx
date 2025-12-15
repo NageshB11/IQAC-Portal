@@ -18,9 +18,9 @@ export default function StudentActivitiesView() {
 
             let endpoint = ''
             if (userRole === 'coordinator') {
-                endpoint = 'http://localhost:5000/api/documents/department'
+                endpoint = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/documents/department`
             } else if (userRole === 'admin') {
-                endpoint = 'http://localhost:5000/api/documents/all'
+                endpoint = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/documents/all`
             } else {
                 return // Should not happen
             }
@@ -48,7 +48,7 @@ export default function StudentActivitiesView() {
     const handleDownload = async (docId: string, title: string) => {
         try {
             const token = localStorage.getItem('token')
-            const response = await fetch(`http://localhost:5000/api/documents/${docId}/download`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/documents/${docId}/download`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

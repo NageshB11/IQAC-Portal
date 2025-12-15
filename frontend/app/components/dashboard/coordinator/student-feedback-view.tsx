@@ -25,7 +25,7 @@ export default function StudentFeedbackView() {
 
             const departmentId = typeof user.department === 'object' ? user.department._id : user.department
 
-            const response = await fetch(`http://localhost:5000/api/departments/${departmentId}/student-feedback`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/departments/${departmentId}/student-feedback`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

@@ -34,7 +34,7 @@ export default function SignupModal({ role, onClose }: SignupModalProps) {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/departments')
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/departments`)
         setDepartments(response.data)
       } catch (err) {
         console.error('Failed to fetch departments:', err)
@@ -81,7 +81,7 @@ export default function SignupModal({ role, onClose }: SignupModalProps) {
         ...(role === 'student' && { enrollmentNumber: formData.enrollmentNumber }),
       }
 
-      const response = await axios.post('http://localhost:5000/api/auth/signup', submitData)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/auth/signup`, submitData)
       localStorage.setItem('token', response.data.token)
       localStorage.setItem('userRole', role)
       localStorage.setItem('user', JSON.stringify(response.data.user))

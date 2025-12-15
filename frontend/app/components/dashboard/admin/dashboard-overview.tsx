@@ -32,22 +32,22 @@ export default function DashboardOverview() {
       const token = localStorage.getItem('token')
 
       // Fetch users
-      const usersRes = await fetch('http://localhost:5000/api/users/all', {
+      const usersRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/users/all`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
 
       // Fetch departments
-      const deptsRes = await fetch('http://localhost:5000/api/departments/all', {
+      const deptsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/departments/all`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
 
       // Fetch documents
-      const docsRes = await fetch('http://localhost:5000/api/documents/all', {
+      const docsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/documents/all`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
 
       // Fetch feedback
-      const feedbackRes = await fetch('http://localhost:5000/api/feedback/all', {
+      const feedbackRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/feedback/all`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
 

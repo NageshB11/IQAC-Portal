@@ -1,0 +1,20 @@
+{
+  "name": "iqacportalproject1",
+  "version": "1.0.0",
+  "description": "A comprehensive web-based portal for managing and tracking faculty activities, student records, and institutional events for Internal Quality Assurance Cell (IQAC) at MGM's College of Engineering, Nanded.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NageshB11/IQAC-Portal.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NageshB11/IQAC-Portal/issues"
+  },
+  "homepage": "https://github.com/NageshB11/IQAC-Portal#readme"
+}

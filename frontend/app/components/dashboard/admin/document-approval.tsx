@@ -14,7 +14,7 @@ export default function DocumentApproval() {
     try {
       const token = localStorage.getItem('token')
       // Fetch ALL documents instead of just pending
-      const response = await fetch('http://localhost:5000/api/documents/all', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/documents/all`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -52,7 +52,7 @@ export default function DocumentApproval() {
   const handleApprove = async (docId: string) => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(`http://localhost:5000/api/documents/${docId}/approve`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/documents/${docId}/approve`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ export default function DocumentApproval() {
   const handleReject = async (docId: string) => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(`http://localhost:5000/api/documents/${docId}/reject`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/documents/${docId}/reject`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -18,7 +18,7 @@ export default function GenerateReport() {
     const fetchDepartments = async () => {
         try {
             const token = localStorage.getItem('token')
-            const response = await fetch('http://localhost:5000/api/departments', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/departments`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
             if (response.ok) {
@@ -63,10 +63,10 @@ export default function GenerateReport() {
                 let fileExtension = ''
 
                 if (format === 'pdf') {
-                    url = `http://localhost:5000/api/reports/generate?${params}`
+                    url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/reports/generate?${params}`
                     fileExtension = 'pdf'
                 } else if (format === 'excel') {
-                    url = `http://localhost:5000/api/excel-reports/generate-excel?${params}`
+                    url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/excel-reports/generate-excel?${params}`
                     fileExtension = 'xlsx'
                 }
 

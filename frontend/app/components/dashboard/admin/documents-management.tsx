@@ -48,11 +48,11 @@ export default function DocumentsManagement() {
             const token = localStorage.getItem('token');
             const userRole = localStorage.getItem('userRole');
 
-            let endpoint = 'http://localhost:5000/api/documents/all';
+            let endpoint = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/documents/all`;
 
             // If coordinator, fetch department documents
             if (userRole === 'coordinator') {
-                endpoint = 'http://localhost:5000/api/documents/department';
+                endpoint = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/documents/department`;
             }
 
             const response = await fetch(endpoint, {

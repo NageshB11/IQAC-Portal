@@ -26,7 +26,7 @@ export default function FacultyManagement() {
       const user = JSON.parse(userStr)
 
       // Fetch all users and filter by department and faculty role
-      const response = await fetch('http://localhost:5000/api/users/all', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/users/all`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

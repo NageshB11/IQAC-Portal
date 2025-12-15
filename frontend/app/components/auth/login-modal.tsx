@@ -31,7 +31,7 @@ export default function LoginModal({ role, onClose }: LoginModalProps) {
     setError('')
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/admin-login', formData)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/auth/admin-login`, formData)
       localStorage.setItem('token', response.data.token)
       localStorage.setItem('userRole', 'admin')
       localStorage.setItem('user', JSON.stringify(response.data.user))

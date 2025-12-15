@@ -42,7 +42,7 @@ export default function CoursesTaught() {
     const fetchCourses = async () => {
         try {
             const token = localStorage.getItem('token')
-            const response = await fetch('http://localhost:5000/api/faculty-activities/courses', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/courses`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
             if (response.ok) {
@@ -62,8 +62,8 @@ export default function CoursesTaught() {
 
         try {
             const url = editingId
-                ? `http://localhost:5000/api/faculty-activities/courses/${editingId}`
-                : 'http://localhost:5000/api/faculty-activities/courses'
+                ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/courses/${editingId}`
+                : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/courses`
 
             const response = await fetch(url, {
                 method: editingId ? 'PUT' : 'POST',
@@ -88,7 +88,7 @@ export default function CoursesTaught() {
 
         const token = localStorage.getItem('token')
         try {
-            const response = await fetch(`http://localhost:5000/api/faculty-activities/courses/${id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/courses/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             })

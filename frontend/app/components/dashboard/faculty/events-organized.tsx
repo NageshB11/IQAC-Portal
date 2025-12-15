@@ -44,7 +44,7 @@ export default function EventsOrganized() {
     const fetchEvents = async () => {
         try {
             const token = localStorage.getItem('token')
-            const response = await fetch('http://localhost:5000/api/faculty-activities/events', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/events`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
             if (response.ok) {
@@ -73,8 +73,8 @@ export default function EventsOrganized() {
 
         try {
             const url = editingId
-                ? `http://localhost:5000/api/faculty-activities/events/${editingId}`
-                : 'http://localhost:5000/api/faculty-activities/events'
+                ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/events/${editingId}`
+                : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/events`
 
             const response = await fetch(url, {
                 method: editingId ? 'PUT' : 'POST',
@@ -96,7 +96,7 @@ export default function EventsOrganized() {
 
         const token = localStorage.getItem('token')
         try {
-            const response = await fetch(`http://localhost:5000/api/faculty-activities/events/${id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/events/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             })

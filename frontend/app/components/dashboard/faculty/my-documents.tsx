@@ -25,7 +25,7 @@ export default function MyDocuments() {
 
       const user = JSON.parse(userStr)
 
-      const response = await fetch(`http://localhost:5000/api/documents/user/${user.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/documents/user/${user.id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -73,7 +73,7 @@ export default function MyDocuments() {
   const handleDownload = async (docId: string, title: string) => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(`http://localhost:5000/api/documents/${docId}/download`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/documents/${docId}/download`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -106,7 +106,7 @@ export default function MyDocuments() {
 
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(`http://localhost:5000/api/documents/${docId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/documents/${docId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -151,7 +151,7 @@ export default function MyDocuments() {
         formData.append('file', editForm.file)
       }
 
-      const response = await fetch(`http://localhost:5000/api/documents/${editingDoc.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/documents/${editingDoc.id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`

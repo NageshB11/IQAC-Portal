@@ -31,8 +31,8 @@ export default function LoginPage() {
 
     try {
       const endpoint = selectedRole === 'admin'
-        ? 'http://localhost:5000/api/auth/admin-login'
-        : 'http://localhost:5000/api/auth/login'
+        ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/auth/admin-login`
+        : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/auth/login`
 
       let payload: any = { password }
 

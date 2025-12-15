@@ -45,7 +45,7 @@ function CoordinatorDashboardContent() {
     // Fetch fresh user data with populated department
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/users/profile', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/users/profile`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
