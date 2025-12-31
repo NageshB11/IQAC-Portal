@@ -552,17 +552,25 @@ router.get('/statistics', verifyToken, checkRole(['faculty', 'coordinator', 'adm
         if (user.role === 'coordinator') {
             const facultyInDept = await User.find({ department: user.department, role: 'faculty' });
             facultyIds = facultyInDept.map(f => f._id);
+        }
+        // Admin logic removed from here as we will handle it in query construction
+
+        let query = {};
+        if (user.role === 'faculty') {
+            query = { faculty: req.userId };
+        } else if (user.role === 'coordinator') {
+            // Coordinator sees their department faculty AND themselves (if they created any)
+            facultyIds.push(req.userId);
+            query = { faculty: { $in: facultyIds } };
         } else if (user.role === 'admin') {
-            const allFaculty = await User.find({ role: 'faculty' });
-            facultyIds = allFaculty.map(f => f._id);
+            query = {}; // Admin sees ALL data
         }
 
-        const query = user.role === 'faculty' ? { faculty: facultyId } : { faculty: { $in: facultyIds } };
-
         const institutionalEventsQuery = user.role === 'coordinator' ? { department: user.department } : {};
-        console.log('📊 Statistics Query for Institutional Events:');
+        console.log('📊 Statistics Query:');
         console.log('  User role:', user.role);
-        console.log('  Query:', JSON.stringify(institutionalEventsQuery));
+        console.log('  Main Query:', JSON.stringify(query));
+        console.log('  Inst Event Query:', JSON.stringify(institutionalEventsQuery));
 
         const [
             researchCount,

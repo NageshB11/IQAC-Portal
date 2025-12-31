@@ -17,7 +17,9 @@ export default function DashboardOverview() {
     approvedDocuments: 0,
     rejectedDocuments: 0,
     totalFeedback: 0,
-    totalActivities: 0
+    totalActivities: 0,
+    totalEvents: 0,
+    totalInstitutionalEvents: 0
   })
   const [recentUsers, setRecentUsers] = useState<any[]>([])
   const [recentDocuments, setRecentDocuments] = useState<any[]>([])
@@ -51,11 +53,18 @@ export default function DashboardOverview() {
         headers: { 'Authorization': `Bearer ${token}` }
       })
 
+      // Fetch activity stats
+      const activitiesRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/statistics`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+
+
       if (usersRes.ok && deptsRes.ok && docsRes.ok) {
         const users = await usersRes.json()
         const depts = await deptsRes.json()
         const docs = await docsRes.json()
         const feedback = feedbackRes.ok ? await feedbackRes.json() : []
+        const activities = activitiesRes.ok ? await activitiesRes.json() : { events: 0, institutionalEvents: 0, research: 0, professionalDevelopment: 0, courses: 0 }
 
         // Calculate statistics
         const facultyCount = users.filter((u: any) => u.role === 'faculty').length
@@ -65,6 +74,8 @@ export default function DashboardOverview() {
         const pendingDocs = docs.filter((d: any) => d.status === 'pending').length
         const approvedDocs = docs.filter((d: any) => d.status === 'approved').length
         const rejectedDocs = docs.filter((d: any) => d.status === 'rejected').length
+
+        const totalActivityCount = (activities.events || 0) + (activities.institutionalEvents || 0) + (activities.research || 0) + (activities.professionalDevelopment || 0) + (activities.courses || 0);
 
         setStats({
           totalUsers: users.length,
@@ -78,7 +89,9 @@ export default function DashboardOverview() {
           approvedDocuments: approvedDocs,
           rejectedDocuments: rejectedDocs,
           totalFeedback: feedback.length || 0,
-          totalActivities: 0 // Can be enhanced with faculty activities
+          totalActivities: totalActivityCount,
+          totalEvents: activities.events || 0,
+          totalInstitutionalEvents: activities.institutionalEvents || 0
         })
 
         // Get recent users (last 5)
@@ -100,17 +113,17 @@ export default function DashboardOverview() {
     { label: 'Total Users', value: stats.totalUsers, icon: '👥', color: 'bg-blue-500', onClick: () => router.push('/dashboard/admin?tab=users') },
     { label: 'Departments', value: stats.totalDepartments, icon: '🏢', color: 'bg-green-500', onClick: () => router.push('/dashboard/admin?tab=departments') },
     { label: 'Pending Approvals', value: stats.pendingApprovals, icon: '⏳', color: 'bg-orange-500', onClick: () => router.push('/dashboard/admin?tab=users') },
-    { label: 'Total Documents', value: stats.totalDocuments, icon: '📄', color: 'bg-purple-500', onClick: () => router.push('/dashboard/admin?tab=documents') },
+    { label: 'Total Activities', value: stats.totalActivities, icon: '📊', color: 'bg-purple-500', onClick: () => router.push('/dashboard/admin?tab=faculty-activities') },
   ]
 
   const detailedStats = [
     { label: 'Faculty Members', value: stats.totalFaculty, icon: '👨‍🏫', color: 'text-blue-600' },
     { label: 'Students', value: stats.totalStudents, icon: '🎓', color: 'text-green-600' },
     { label: 'Coordinators', value: stats.totalCoordinators, icon: '👔', color: 'text-purple-600' },
-    { label: 'Pending Documents', value: stats.pendingDocuments, icon: '📋', color: 'text-yellow-600' },
-    { label: 'Approved Documents', value: stats.approvedDocuments, icon: '✅', color: 'text-green-600' },
-    { label: 'Rejected Documents', value: stats.rejectedDocuments, icon: '❌', color: 'text-red-600' },
+    { label: 'Events Organized', value: stats.totalEvents, icon: '📅', color: 'text-orange-600' },
     { label: 'Total Feedback', value: stats.totalFeedback, icon: '💬', color: 'text-indigo-600' },
+    { label: 'Approved Documents', value: stats.approvedDocuments, icon: '✅', color: 'text-green-600' },
+    { label: 'Pending Documents', value: stats.pendingDocuments, icon: '📋', color: 'text-yellow-600' },
   ]
 
   return (
@@ -178,9 +191,9 @@ export default function DashboardOverview() {
                   </div>
                   <div className="text-right">
                     <span className={`text-xs px-2 py-1 rounded-full capitalize ${user.role === 'admin' ? 'bg-red-100 text-red-700' :
-                        user.role === 'coordinator' ? 'bg-purple-100 text-purple-700' :
-                          user.role === 'faculty' ? 'bg-blue-100 text-blue-700' :
-                            'bg-green-100 text-green-700'
+                      user.role === 'coordinator' ? 'bg-purple-100 text-purple-700' :
+                        user.role === 'faculty' ? 'bg-blue-100 text-blue-700' :
+                          'bg-green-100 text-green-700'
                       }`}>
                       {user.role}
                     </span>
@@ -222,8 +235,8 @@ export default function DashboardOverview() {
                       </p>
                     </div>
                     <span className={`text-xs px-2 py-1 rounded-full ml-2 ${doc.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                        doc.status === 'approved' ? 'bg-green-100 text-green-700' :
-                          'bg-red-100 text-red-700'
+                      doc.status === 'approved' ? 'bg-green-100 text-green-700' :
+                        'bg-red-100 text-red-700'
                       }`}>
                       {doc.status}
                     </span>
