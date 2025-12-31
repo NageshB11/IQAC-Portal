@@ -24,6 +24,25 @@ app.use(cors());
 app.use(express.json());
 
 // Serve static files from uploads directory
+// Serve static files from uploads directory
+import fs from 'fs';
+import path from 'path';
+
+// Ensure upload directories exist
+const uploadDirs = [
+  'uploads',
+  'uploads/documents',
+  'uploads/faculty-activities'
+];
+
+uploadDirs.forEach(dir => {
+  const dirPath = path.join(process.cwd(), dir);
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+    console.log(`✓ Created directory: ${dir}`);
+  }
+});
+
 app.use('/uploads', express.static('uploads'));
 
 const connectDB = async () => {
