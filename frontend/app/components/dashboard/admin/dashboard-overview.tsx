@@ -53,9 +53,12 @@ export default function DashboardOverview() {
         headers: { 'Authorization': `Bearer ${token}` }
       })
 
-      // Fetch activity stats
-      const activitiesRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/statistics`, {
-        headers: { 'Authorization': `Bearer ${token}` }
+      // Fetch activity stats with cache busting
+      const activitiesRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/statistics?t=${new Date().getTime()}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Cache-Control': 'no-cache'
+        }
       })
 
 

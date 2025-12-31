@@ -21,8 +21,13 @@ export default function FacultyActivitiesView() {
     const fetchStatistics = async () => {
         try {
             const token = localStorage.getItem('token')
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/statistics`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+            // Add timestamp to prevent caching
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/faculty-activities/statistics?t=${new Date().getTime()}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache'
+                }
             })
             if (response.ok) {
                 const data = await response.json()
