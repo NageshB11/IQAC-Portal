@@ -12,16 +12,15 @@ A comprehensive web-based portal for managing and tracking faculty activities, s
 ## 📋 Table of Contents
 
 - [Features](#-features)
-- [Tech Stack](#-tech-stack)
+- [Tech Stack](#️-tech-stack)
 - [Project Structure](#-project-structure)
 - [Installation](#-installation)
-- [Configuration](#-configuration)
-- [Usage](#-usage)
+- [Database Setup](#-database-setup)
+- [Running the Application](#-running-the-application)
+- [Default Credentials](#-default-credentials)
 - [Deployment](#-deployment)
-- [User Roles](#-user-roles)
-- [Screenshots](#-screenshots)
+- [Database Management](#-database-management)
 - [Contributing](#-contributing)
-- [License](#-license)
 
 ---
 
@@ -41,7 +40,6 @@ A comprehensive web-based portal for managing and tracking faculty activities, s
 - ✅ Generate department reports
 - ✅ Monitor student feedback
 - ✅ Approve/reject faculty submissions
-- ✅ View timetables and schedules
 
 ### 👨‍🏫 **Faculty Features**
 - ✅ Submit research publications
@@ -49,29 +47,12 @@ A comprehensive web-based portal for managing and tracking faculty activities, s
 - ✅ Log courses taught
 - ✅ Submit events organized
 - ✅ Track personal activity history
-- ✅ Download activity reports
 
 ### 👨‍🎓 **Student Features**
 - ✅ View academic information
 - ✅ Submit feedback
 - ✅ Track achievements
 - ✅ View timetables
-- ✅ Access course materials
-
-### 📊 **Reporting & Analytics**
-- ✅ Multi-format reports (PDF, Excel)
-- ✅ Year-wise activity filtering
-- ✅ Department-wise statistics
-- ✅ Activity type categorization
-- ✅ Professional headers with college branding
-- ✅ Downloadable documents
-
-### 🏛️ **Institutional Events**
-- ✅ 31 pre-loaded workshops/seminars/conferences (2023-24)
-- ✅ Department-wise event tracking
-- ✅ Participant count management
-- ✅ Activity report links
-- ✅ Event categorization
 
 ---
 
@@ -84,24 +65,15 @@ A comprehensive web-based portal for managing and tracking faculty activities, s
 - **UI Components:** Radix UI, Shadcn/ui
 - **Forms:** React Hook Form + Zod validation
 - **Charts:** Recharts
-- **Icons:** Lucide React
 - **HTTP Client:** Axios
 
 ### **Backend**
 - **Runtime:** Node.js 18+
 - **Framework:** Express.js 4.18
-- **Language:** JavaScript (ES6 Modules)
 - **Database:** MongoDB 7.0 with Mongoose ODM
 - **Authentication:** JWT (jsonwebtoken)
 - **Password Hashing:** bcryptjs
-- **File Upload:** Multer
-- **Validation:** Express Validator
 - **Report Generation:** PDFKit, ExcelJS
-
-### **Database**
-- **Primary DB:** MongoDB
-- **ODM:** Mongoose
-- **Models:** User, Department, FacultyActivity, ResearchPublication, ProfessionalDevelopment, InstitutionalEvent, CourseTaught, EventOrganized, StudentFeedback, Timetable
 
 ---
 
@@ -113,7 +85,6 @@ iqacportalproject1/
 │   ├── app/                      # Next.js app directory
 │   ├── components/               # React components
 │   ├── public/                   # Static assets
-│   ├── styles/                   # Global styles
 │   └── package.json              # Frontend dependencies
 │
 ├── backend/                      # Express backend
@@ -122,7 +93,10 @@ iqacportalproject1/
 │   ├── server.js                 # Main server file
 │   └── package.json              # Backend dependencies
 │
-└── README.md                  # This file
+├── README.md                     # This file
+├── netlify.toml                  # Netlify deployment config
+└── render.yaml                   # Render deployment config
+```
 
 ---
 
@@ -135,8 +109,8 @@ iqacportalproject1/
 
 ### **Step 1: Clone Repository**
 ```bash
-git clone https://github.com/YOUR_USERNAME/iqac-portal.git
-cd iqac-portal
+git clone https://github.com/NageshB11/IQAC-Portal.git
+cd iqacportalproject1
 ```
 
 ### **Step 2: Install Backend Dependencies**
@@ -168,24 +142,70 @@ PORT=5000
 NODE_ENV=development
 ```
 
-### **Step 5: Initialize Database**
-```bash
-cd backend
+---
 
-# Create departments and coordinators
-node seed-departments-coordinators.js
+## 🗄️ Database Setup
 
-# Seed institutional events (workshops/seminars)
-node seed-institutional-events.js
+### **Option 1: Local MongoDB**
 
-# Seed professional development data
-node seed-professional-development.js
+1. **Install MongoDB** on your system
+2. **Start MongoDB service:**
+   ```bash
+   # Windows
+   net start MongoDB
+   
+   # Linux/Mac
+   sudo systemctl start mongod
+   ```
 
-# Create admin account
-node create-admin.js
-```
+3. **Initialize Database:**
+   ```bash
+   cd backend
+   
+   # Create departments and coordinators
+   node seed-departments-coordinators.js
+   
+   # Create admin account
+   node create-admin.js
+   
+   # Seed institutional events
+   node seed-institutional-events.js
+   
+   # Seed professional development data
+   node seed-professional-development.js
+   ```
 
-### **Step 6: Start Development Servers**
+4. **Verify Database:**
+   ```bash
+   node verify-database.js
+   ```
+
+### **Option 2: MongoDB Atlas (Cloud)**
+
+1. **Create Account:** Go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+2. **Create Free Cluster (M0)**
+3. **Create Database User:**
+   - Go to "Database Access"
+   - Add new user with password
+   - Role: "Read and write to any database"
+4. **Allow Network Access:**
+   - Go to "Network Access"
+   - Add IP Address → "Allow Access from Anywhere" (0.0.0.0/0)
+5. **Get Connection String:**
+   - Go to "Database" → "Connect" → "Drivers"
+   - Copy connection string
+   - Replace `<password>` with your actual password
+6. **Update backend/.env:**
+   ```env
+   MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/iqac-portal
+   ```
+7. **Run seed scripts** (same as Option 1)
+
+---
+
+## 💻 Running the Application
+
+### **Development Mode**
 
 **Terminal 1 - Backend:**
 ```bash
@@ -205,66 +225,27 @@ npm run dev
 
 ---
 
-## ⚙️ Configuration
+## 🔑 Default Credentials
 
-### **Environment Variables**
+After running seed scripts, use these credentials to login:
 
-#### **Frontend (.env.local)**
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `NEXT_PUBLIC_API_URL` | Backend API URL | `http://localhost:5000` |
+### **Admin:**
+```
+Email:    admin@mgmcen.ac.in
+Password: Admin@123
+```
 
-#### **Backend (server/.env)**
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `MONGODB_URI` | MongoDB connection string | `mongodb://localhost:27017/iqac-portal` |
-| `JWT_SECRET` | Secret key for JWT tokens | `your-secret-key-min-32-chars` |
-| `PORT` | Server port | `5000` |
-| `NODE_ENV` | Environment mode | `development` or `production` |
-
----
-
-## 💻 Usage
-
-### **Default Credentials**
-
-After running seed scripts, you'll have:
-
-**Admin:**
-- Email: `admin@mgmcen.ac.in`
-- Password: `Admin@123`
-
-**Coordinators (6 departments):**
-- Email: `cse.coord@mgmcen.ac.in` (Password: `CSE@2024`)
-- Email: `it.coord@mgmcen.ac.in` (Password: `IT@2024`)
-- Email: `mech.coord@mgmcen.ac.in` (Password: `MECH@2024`)
-- Email: `civil.coord@mgmcen.ac.in` (Password: `CIVIL@2024`)
-- Email: `ece.coord@mgmcen.ac.in` (Password: `ECE@2024`)
-- Email: `eee.coord@mgmcen.ac.in` (Password: `EEE@2024`)
+### **Coordinators:**
+```
+CSE:   cse.coord@iqac.edu    / cse123
+IT:    it.coord@iqac.edu     / it123
+ENTC:  entc.coord@iqac.edu   / entc123
+EEE:   eee.coord@iqac.edu    / eee123
+ME:    mech.coord@iqac.edu   / mech123
+CE:    civil.coord@iqac.edu  / civil123
+```
 
 **⚠️ IMPORTANT:** Change all default passwords after first login!
-
-### **Common Tasks**
-
-#### **Generate Reports**
-1. Login as Admin or Coordinator
-2. Navigate to "Generate Report"
-3. Select academic year, activity type, and format
-4. Click "Generate Report"
-5. Download PDF or Excel file
-
-#### **Add Faculty Activity**
-1. Login as Faculty
-2. Navigate to respective section (Research, Professional Development, etc.)
-3. Click "Add New"
-4. Fill in the form
-5. Submit for approval
-
-#### **Approve Activities (Coordinator/Admin)**
-1. Login as Coordinator or Admin
-2. Navigate to "Faculty Activities" or "Document Approval"
-3. Review submissions
-4. Approve or reject with comments
 
 ---
 
@@ -272,359 +253,134 @@ After running seed scripts, you'll have:
 
 ### **Quick Deployment (Free Tier)**
 
-**1. Database - MongoDB Atlas (Free)**
+#### **1. Database - MongoDB Atlas (Free)**
 - Sign up at https://www.mongodb.com/cloud/atlas
 - Create M0 free cluster
 - Get connection string
+- Run seed scripts to populate data
 
-**2. Backend - Render.com (Free)**
-- Sign up at https://render.com
-- Create new Web Service
-- Connect GitHub repository
-- Set environment variables
-- Deploy
+#### **2. Backend - Render.com (Free)**
 
-**3. Frontend - Vercel (Free)**
-how can i run this project
+1. Login to [Render.com](https://render.com)
+2. Click **"New"** → **"Web Service"**
+3. Connect your GitHub repository
+4. **Root Directory:** `backend`
+5. **Build Command:** `npm install`
+6. **Start Command:** `npm start`
+7. **Environment Variables:**
+   ```
+   MONGODB_URI=<your-mongodb-atlas-connection-string>
+   JWT_SECRET=<your-secret-key-min-32-chars>
+   NODE_ENV=production
+   ```
+8. Click **"Create Web Service"**
+9. Copy your Service URL (e.g., `https://iqac-backend.onrender.com`)
 
+#### **3. Frontend - Netlify (Free)**
 
-Thought for 2s
+1. Login to [Netlify](https://www.netlify.com)
+2. Click **"Add new site"** → **"Import an existing project"**
+3. Connect with GitHub and select your repository
+4. **Base directory:** `frontend`
+5. **Build command:** `npm run build`
+6. **Publish directory:** `.next`
+7. **Environment Variables:**
+   ```
+   NEXT_PUBLIC_API_URL=<your-render-backend-url>
+   ```
+   (Example: `https://iqac-backend.onrender.com` - NO trailing slash)
+8. Click **"Deploy"**
 
+### **Seed Cloud Database**
 
+After deployment, seed your cloud database:
 
+1. Update your local `backend/.env` with Atlas connection string
+2. Run seed scripts locally:
+   ```bash
+   cd backend
+   node seed-departments-coordinators.js
+   node create-admin.js
+   node seed-institutional-events.js
+   node seed-professional-development.js
+   ```
+3. Data will be added to your cloud database
+4. Now you can login to your deployed application!
 
-Analyzed
-1tcejorplatropcaqi\potkseD\evirDenO\hsegaN\sresU\:c
+---
 
-Thought for <1s
+## 📊 Database Management
 
+### **View Database (MongoDB Compass)**
 
+1. **Download:** https://www.mongodb.com/try/download/compass
+2. **Connect:** `mongodb://localhost:27017/iqac-portal`
+3. **Browse Collections:**
+   - users
+   - departments
+   - institutionalevents
+   - professionaldevelopments
+   - feedbacks
+   - timetables
+   - announcements
+   - documents
 
+### **Backup Database**
 
-Analyzed
-package.json#L1-21
-Analyzed
-package.json#L1-84
-Analyzed
-package.json#L1-32
+**Windows:**
+```bash
+# Double-click backup-database.bat
+# Or run manually:
+mongodump --db iqac-portal --out C:\backup\iqac-portal
+```
 
-Thought for 3s
+**Linux/Mac:**
+```bash
+mongodump --db iqac-portal --out ~/backup/iqac-portal
+```
 
+### **Restore Database**
 
+```bash
+mongorestore --db iqac-portal /path/to/backup/iqac-portal
+```
 
+### **Export to JSON**
 
+**Windows:**
+```bash
+# Double-click export-database.bat
+# Or run manually:
+mongoexport --db iqac-portal --collection users --out users.json
+```
 
+---
 
-Analyzed
-dnekcab\1tcejorplatropcaqi\potkseD\evirDenO\hsegaN\sresU\:c
-Analyzed
-dnetnorf\1tcejorplatropcaqi\potkseD\evirDenO\hsegaN\sresU\:c
-Analyzed
-DEPLOYMENT_GUIDE.md#L1-89
-dont give me files gieve me only cmd on chat
+## 🔧 Useful Scripts
 
+### **Backend Scripts**
 
-Thought for 8s
-
-
-
-
-
-
-
-
-
-
-To run the project, you need to open two separate terminals (one for the backend and one for the frontend) and run the following commands:
-
-Terminal 1: Backend
-powershell
+```bash
 cd backend
-npm install
-npm run dev
-Terminal 2: Frontend
-powershell
-cd frontend
-npm install
-npm run dev
-The backend will typically run on port 5000 (or similar), and the frontend will run on http://localhost:3000.
 
-i want host backend to on the render so make changes accordingly and push on github then tell me ow to host
+# Verify database status
+node verify-database.js
 
+# Check admin account
+node check-admin.js
 
-Thought for 5s
+# Create new coordinator
+node addCoordinator.js
 
+# Reset database
+node reset-database.js
+```
 
+### **Database Utilities**
 
-
-
-
-Analyzed
-server.js#L1-137
-Analyzed
-render.yaml#L1-17
-Searched
-*api*
-70 results
-Searched
-.env*
-0 results
-
-Thought Process
-
-
-
-
-
-
-
-
-Access to file
-.env.local
-is prohibited by
-.gitignore
-
-Thought for <1s
-
-
-
-
-…\iqacportalproject1 > git status
-
-PS C:\Users\Nagesh\OneDrive\Desktop\iqacportalproject1>   
-PS C:\Users\Nagesh\OneDrive\Desktop\iqacportalproject1> cd 'c:\Users\Nagesh\OneDrive\Desktop\iqacportalproject1'    
-PS C:\Users\Nagesh\OneDrive\Desktop\iqacportalproject1> git status
-On branch main
-Your branch is up to date wit
-
-
-
-                            mit -a") add" and/or "git comm
-        package.json
-Go to Terminal
-·
-Exit code 0
-
-Always Proceed
-Searched
-NEXT_PUBLIC_API_URL
-0 results
-Searched
-http://localhost:5000
-102 results
-
-Thought for 27s
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-…\iqacportalproject1 > Get-ChildItem -Path frontend -Recurse -File | Select-String -Pattern "http://localhost:5000" -List | ForEach-Object { $_.Path }
-
-C:\Users\Nagesh\OneDrive\Desk
-
-
-
-
-
-
-
-                            .ts\app\utils\downloadHelpers.
-C:\Users\Nagesh\OneDrive\Desk
-Go to Terminal
-·
-Exit code 1
-
-Always Proceed
-
-Thought for <1s
-
-
-Checked command status
-
-Thought for 2s
-
-
-
-
-…\iqacportalproject1 > Get-ChildItem -Path frontend -Recurse -File | Where-Object { $_.FullName -notmatch "node_modules" -and $_.FullName -notmatch "\\.next" } | Select-String -Pattern "http://localhost:5000" -List | ForEach-Object { $_.Path }
-
-C:\Users\Nagesh\OneDrive\Desk
-
-
-
-
-
-
-
-                            .ts\app\utils\downloadHelpers.
-C:\Users\Nagesh\OneDrive\Desk
-Go to Terminal
-·
-Exit code 0
-
-Always Proceed
-
-Thought for <1s
-
-
-Checked command status
-
-Thought for 3s
-
-
-
-
-…\iqacportalproject1 > Get-ChildItem -Path frontend -Recurse -Include *.tsx,*.ts,*.js | Where-Object { $_.FullName -notmatch "node_modules" -and $_.FullName -notmatch "\\.next" } | Select-String -Pattern "http://localhost:5000" -List | Select-Object -ExpandProperty Path > files_to_edit.txt
-
-Go to Terminal
-·
-Exit code 0
-
-Always Proceed
-
-Thought for <1s
-
-
-Checked command status
-
-Thought for <1s
-
-
-…\iqacportalproject1 > type files_to_edit.txt
-
-C:\Users\Nagesh\OneDrive\Desk
-
-
-
-
-
-
-
-                            .ts\app\utils\downloadHelpers.
-C:\Users\Nagesh\OneDrive\Desk
-Go to Terminal
-·
-Exit code 0
-
-Always Proceed
-
-Thought for <1s
-
-
-Checked command status
-
-Thought for 31s
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Edited
-update_api_url.js
-+83
--0
-
-Thought for <1s
-
-
-…\iqacportalproject1 > node update_api_url.js
-
-Starting Update...
-Updated: C:\Users\Nagesh\OneD
-
-
-
-
-
-
-                            adHelpers.ts\app\utils\downloa
-Done.ed: C:\Users\Nagesh\OneD
-Updated: C:\Users\Nagesh\OneD
-Go to Terminal
-·
-Exit code 0
-
-Always Proceed
-
-Thought for <1s
-
-
-Checked command status
-
-Thought for 1s
-
-
-
-
-…\iqacportalproject1 > del update_api_url.js files_to_edit.txt
-
-Ran background terminal command
-Relocate
-·
-Exit code 1
-
-Always Proceed
-Analyzed
-downloadHelpers.ts#L1-103
-
-Thought for 4s
-
-
-
-
-
-
-
-
-Analyzed
-next.config.mjs#L1-12
-
-Thought for <1s
-
-
-
-
-…\iqacportalproject1 > git ad
-- Sign up at https://vercel.com
-- Import GitHub repository
-- Set environment variables
-- Deploy
-
+- **`initialize-database.bat`** - Initialize complete database
+- **`backup-database.bat`** - Create database backup
+- **`export-database.bat`** - Export all collections to JSON
 
 ---
 
@@ -635,27 +391,23 @@ Thought for <1s
 - Manage all users and departments
 - Generate system-wide reports
 - View all activities
-- Access activity logs
 
 ### **2. Coordinator**
 - Department-level access
 - Manage department faculty
 - Approve faculty activities
 - Generate department reports
-- View student feedback
 
 ### **3. Faculty**
 - Personal activity management
 - Submit research publications
 - Record professional development
 - Log courses taught
-- Submit events organized
 
 ### **4. Student**
 - View academic information
 - Submit feedback
 - Track achievements
-- Access timetables
 
 ---
 
@@ -669,7 +421,7 @@ Thought for <1s
 - Department associations
 
 **Departments:**
-- 6 Engineering departments
+- 6 Engineering departments (CSE, IT, ENTC, EEE, ME, CE)
 - Coordinator assignments
 - Faculty listings
 
@@ -680,30 +432,9 @@ Thought for <1s
 - Events Organized
 
 **Institutional Events:**
-- 31 workshops/seminars/conferences (2023-24)
+- Workshops/Seminars/Conferences
 - Department-wise categorization
 - Participant tracking
-
-**Student Data:**
-- Academic information
-- Feedback submissions
-- Achievements
-
----
-
-## 🎨 Screenshots
-
-### **Login Page**
-Modern authentication interface with role-based login
-
-### **Admin Dashboard**
-Comprehensive overview with statistics and quick actions
-
-### **Report Generation**
-Multi-format report generation with filtering options
-
-### **Faculty Activities**
-Easy-to-use forms for activity submission
 
 ---
 
@@ -721,7 +452,7 @@ Contributions are welcome! Please follow these steps:
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
 
 ---
 
@@ -729,7 +460,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Nagesh B**
 - GitHub: [@NageshB11](https://github.com/NageshB11)
-- Project: Quiz Website / IQAC Portal
+- Project: IQAC Portal
 
 ---
 
@@ -752,25 +483,13 @@ For issues, questions, or suggestions:
 
 ## 🔄 Version History
 
-**v1.0.0** (December 2025)
+**v1.0.0** (December 2024)
 - Initial release
 - Complete IQAC portal with all features
 - 31 institutional events pre-loaded
 - Multi-role support
 - Report generation (PDF/Excel)
 - Activity logging and audit trails
-
----
-
-## 🚧 Roadmap
-
-- [ ] Mobile app (React Native)
-- [ ] Email notifications
-- [ ] Advanced analytics dashboard
-- [ ] Document version control
-- [ ] Automated backup system
-- [ ] Multi-language support
-- [ ] API documentation (Swagger)
 
 ---
 

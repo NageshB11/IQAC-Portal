@@ -57,3 +57,9 @@ backend/uploads/*
 *.tmp
 *.temp
 .cache/
+
+# Local utility files (not needed in repository)
+*.bat
+QUICK_REFERENCE.txt
+DATABASE_ACCESS_GUIDE.md
+DATABASE_INITIALIZED.md
