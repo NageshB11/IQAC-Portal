@@ -129,10 +129,19 @@ router.get('/department', verifyToken, checkRole(['coordinator']), async (req, r
       return res.status(404).json({ message: 'User or department not found' });
     }
 
-    const documents = await Document.find({ department: user.department })
-      .populate('uploadedBy', 'firstName lastName email role')
+    // Find documents linked to this department
+    const allDocuments = await Document.find({ department: user.department })
+      .populate({
+        path: 'uploadedBy',
+        select: 'firstName lastName email role department',
+        match: { department: user.department } // Only populate if user is currently in this department
+      })
       .populate('department', 'name code')
       .sort({ createdAt: -1 });
+
+    // Filter out documents where the user is no longer in the department (uploadedBy will be null due to match)
+    const documents = allDocuments.filter(doc => doc.uploadedBy !== null);
+
     res.json(documents);
   } catch (error) {
     res.status(500).json({ message: error.message });
