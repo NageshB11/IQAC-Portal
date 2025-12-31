@@ -64,7 +64,7 @@ function FacultyDashboardContent() {
             {activeTab === 'announcements' && 'Announcements'}
           </h1>
           <div className="flex items-center gap-4">
-            <span className="text-gray-700">Welcome, Dr. {user?.lastName}</span>
+            <span className="text-gray-700">Welcome, {user?.firstName} {user?.lastName}</span>
             <button
               onClick={() => {
                 localStorage.clear()

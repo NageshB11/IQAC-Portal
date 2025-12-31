@@ -50,7 +50,7 @@ export default function Achievements() {
                 form.reset()
             } else {
                 const errorData = await response.json()
-                setMessage(`Upload failed: ${errorData.message}`)
+                setMessage(`Upload failed: ${errorData.message || errorData.error || 'Unknown error'}`)
             }
         } catch (error) {
             console.error('Upload error:', error)

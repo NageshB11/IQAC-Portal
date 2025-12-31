@@ -98,8 +98,8 @@ export default function FeedbackForm() {
                       type="button"
                       onClick={() => setFeedbackType(type.id)}
                       className={`p-4 rounded-lg border-2 transition ${feedbackType === type.id
-                          ? 'border-orange-600 bg-orange-50'
-                          : 'border-gray-300 hover:border-orange-400'
+                        ? 'border-orange-600 bg-orange-50'
+                        : 'border-gray-300 hover:border-orange-400'
                         }`}
                     >
                       <div className="text-2xl mb-2">{type.icon}</div>
@@ -124,7 +124,7 @@ export default function FeedbackForm() {
                     placeholder={
                       feedbackType === 'course'
                         ? 'e.g., Data Structures'
-                        : 'e.g., Dr. John Smith'
+                        : 'e.g., John Smith'
                     }
                     required
                   />
