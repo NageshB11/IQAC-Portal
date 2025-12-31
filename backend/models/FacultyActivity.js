@@ -240,6 +240,18 @@ const eventOrganizedSchema = new mongoose.Schema({
         enum: ['organizer', 'coordinator', 'volunteer'],
         required: true
     },
+    organizingUnit: {
+        type: String, // e.g. "NSS", "NCC", "MGM"
+        required: false
+    },
+    schemeName: {
+        type: String, // e.g. "Swachh Bharat", "Tech Life"
+        required: false
+    },
+    academicYear: {
+        type: String, // e.g. "2023-2024"
+        required: false
+    },
     description: String,
     reportUrl: String,
     photosUrl: [String],

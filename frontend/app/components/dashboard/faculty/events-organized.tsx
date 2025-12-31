@@ -10,6 +10,9 @@ interface EventOrganized {
     duration: number
     participantCount: number
     role: string
+    organizingUnit?: string
+    schemeName?: string
+    academicYear?: string
     description?: string
     reportUrl?: string
     photosUrl?: string[]
@@ -33,6 +36,9 @@ export default function EventsOrganized() {
         duration: '',
         participantCount: '',
         role: 'organizer',
+        organizingUnit: '',
+        schemeName: '',
+        academicYear: '',
         description: '',
         files: [] as File[]
     })
@@ -117,6 +123,9 @@ export default function EventsOrganized() {
             duration: event.duration.toString(),
             participantCount: event.participantCount.toString(),
             role: event.role,
+            organizingUnit: event.organizingUnit || '',
+            schemeName: event.schemeName || '',
+            academicYear: event.academicYear || '',
             description: event.description || '',
             files: []
         })
@@ -131,6 +140,9 @@ export default function EventsOrganized() {
             duration: '',
             participantCount: '',
             role: 'organizer',
+            organizingUnit: '',
+            schemeName: '',
+            academicYear: '',
             description: '',
             files: []
         })
@@ -233,6 +245,43 @@ export default function EventsOrganized() {
                                 />
                             </div>
 
+                            {/* New Fields */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Organizing Unit/Agency</label>
+                                <input
+                                    type="text"
+                                    value={formData.organizingUnit}
+                                    onChange={(e) => setFormData({ ...formData, organizingUnit: e.target.value })}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                    placeholder="e.g. MGM, NSS"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Scheme Name</label>
+                                <input
+                                    type="text"
+                                    value={formData.schemeName}
+                                    onChange={(e) => setFormData({ ...formData, schemeName: e.target.value })}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                    placeholder="e.g. Tech Life"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Academic Year</label>
+                                <select
+                                    value={formData.academicYear}
+                                    onChange={(e) => setFormData({ ...formData, academicYear: e.target.value })}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                >
+                                    <option value="">Select Year</option>
+                                    <option value="2023-2024">2023-2024</option>
+                                    <option value="2024-2025">2024-2025</option>
+                                    <option value="2025-2026">2025-2026</option>
+                                </select>
+                            </div>
+
                             <div className="md:col-span-2">
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
                                 <textarea
@@ -284,8 +333,8 @@ export default function EventsOrganized() {
                         <div key={event._id} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
                             <div className="flex justify-between items-start mb-3">
                                 <span className={`px-3 py-1 text-xs rounded-full ${event.status === 'approved' ? 'bg-green-100 text-green-700' :
-                                        event.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                                            'bg-red-100 text-red-700'
+                                    event.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                                        'bg-red-100 text-red-700'
                                     }`}>
                                     {event.status}
                                 </span>
@@ -302,17 +351,27 @@ export default function EventsOrganized() {
                                     <span>{new Date(event.eventDate).toLocaleDateString()}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <span className="font-medium">Duration:</span>
-                                    <span>{event.duration} hours</span>
-                                </div>
-                                <div className="flex items-center gap-2">
                                     <span className="font-medium">Participants:</span>
                                     <span>{event.participantCount}</span>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <span className="font-medium">Role:</span>
-                                    <span className="capitalize">{event.role}</span>
-                                </div>
+                                {event.organizingUnit && (
+                                    <div className="flex items-center gap-2">
+                                        <span className="font-medium">Unit:</span>
+                                        <span>{event.organizingUnit}</span>
+                                    </div>
+                                )}
+                                {event.schemeName && (
+                                    <div className="flex items-center gap-2">
+                                        <span className="font-medium">Scheme:</span>
+                                        <span>{event.schemeName}</span>
+                                    </div>
+                                )}
+                                {event.academicYear && (
+                                    <div className="flex items-center gap-2">
+                                        <span className="font-medium">Year:</span>
+                                        <span>{event.academicYear}</span>
+                                    </div>
+                                )}
                             </div>
 
                             {event.description && (

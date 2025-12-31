@@ -440,9 +440,11 @@ router.get('/generate-excel', verifyToken, checkRole(['coordinator', 'admin']), 
                     { header: 'Faculty Name', key: 'faculty', width: 25 },
                     { header: 'Department', key: 'department', width: 25 },
                     { header: 'Event Name', key: 'eventName', width: 35 },
+                    { header: 'Organising Unit', key: 'organizingUnit', width: 25 },
+                    { header: 'Scheme Name', key: 'schemeName', width: 20 },
+                    { header: 'Academic Year', key: 'academicYear', width: 15 },
                     { header: 'Event Type', key: 'eventType', width: 15 },
                     { header: 'Event Date', key: 'eventDate', width: 15 },
-                    { header: 'Duration (Hours)', key: 'duration', width: 15 },
                     { header: 'Participants', key: 'participants', width: 15 },
                     { header: 'Role', key: 'role', width: 15 }
                 ];
@@ -482,9 +484,11 @@ router.get('/generate-excel', verifyToken, checkRole(['coordinator', 'admin']), 
                         row.getCell(colIndex++).value = item.department?.name || 'N/A';
                     }
                     row.getCell(colIndex++).value = item.eventName || 'N/A';
+                    row.getCell(colIndex++).value = item.organizingUnit || 'N/A';
+                    row.getCell(colIndex++).value = item.schemeName || 'N/A';
+                    row.getCell(colIndex++).value = item.academicYear || 'N/A';
                     row.getCell(colIndex++).value = item.eventType || 'N/A';
                     row.getCell(colIndex++).value = formatDate(item.eventDate);
-                    row.getCell(colIndex++).value = item.duration || 'N/A';
                     row.getCell(colIndex++).value = item.participantCount || 'N/A';
                     row.getCell(colIndex++).value = item.role || 'N/A';
 
