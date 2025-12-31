@@ -100,17 +100,17 @@ export default function Home() {
           <div className="text-center">
             <div className="text-2xl mb-4">📧</div>
             <h3 className="font-bold text-gray-900 mb-2">Email</h3>
-            <p className="text-gray-600">support@iqacportal.com</p>
+            <p className="text-gray-600">mgmcen@mgmcen.ac.in</p>
           </div>
           <div className="text-center">
             <div className="text-2xl mb-4">📞</div>
-            <h3 className="font-bold text-gray-900 mb-2">Phone</h3>
-            <p className="text-gray-600">+91 (555) 123-4567</p>
+            <h3 className="font-bold text-gray-900 mb-2">Phone (Office)</h3>
+            <p className="text-gray-600">02462 222999, 02462 224101</p>
           </div>
           <div className="text-center">
             <div className="text-2xl mb-4">📍</div>
             <h3 className="font-bold text-gray-900 mb-2">Address</h3>
-            <p className="text-gray-600">Education Hub, India</p>
+            <p className="text-gray-600">Nanded, Maharashtra, 431602</p>
           </div>
         </div>
       </section>
