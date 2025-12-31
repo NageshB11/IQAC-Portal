@@ -31,6 +31,7 @@ export default function FacultyActivitiesView() {
             })
             if (response.ok) {
                 const data = await response.json()
+                console.log('📊 Statistics Data Received:', data)
                 setStatistics(data)
             }
         } catch (error) {

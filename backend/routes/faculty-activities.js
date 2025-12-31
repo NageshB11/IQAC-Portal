@@ -546,55 +546,28 @@ router.get('/statistics', verifyToken, checkRole(['faculty', 'coordinator', 'adm
         const User = (await import('../models/User.js')).default;
         const user = await User.findById(req.userId);
 
-        // Admin sees ALL data - Simplified logic
-        if (user.role === 'admin') {
-            console.log('📊 Admin Statistics Request - Fetching ALL counts');
-            const [
-                researchCount,
-                pdCount,
-                coursesCount,
-                eventsCount,
-                institutionalEventsCount
-            ] = await Promise.all([
-                ResearchPublication.countDocuments({}),
-                ProfessionalDevelopment.countDocuments({}),
-                CourseTaught.countDocuments({}),
-                EventOrganized.countDocuments({}),
-                InstitutionalEvent.countDocuments({})
-            ]);
+        // Build queries based on role
+        let mainQuery = {};
+        let instQuery = {};
 
-            return res.json({
-                research: researchCount,
-                professionalDevelopment: pdCount,
-                courses: coursesCount,
-                events: eventsCount,
-                institutionalEvents: institutionalEventsCount
-            });
-        }
-
-        let facultyId = req.userId;
-        let facultyIds = [req.userId];
-
-        if (user.role === 'coordinator') {
-            const facultyInDept = await User.find({ department: user.department, role: 'faculty' });
-            facultyIds = facultyInDept.map(f => f._id);
-        }
-        // Admin logic removed from here as we will handle it in query construction
-
-        let query = {};
         if (user.role === 'faculty') {
-            query = { faculty: req.userId };
+            mainQuery = { faculty: req.userId };
+            instQuery = { department: user.department };
         } else if (user.role === 'coordinator') {
-            // Coordinator sees their department faculty AND themselves (if they created any)
-            facultyIds.push(req.userId);
-            query = { faculty: { $in: facultyIds } };
+            const facultyInDept = await User.find({ department: user.department });
+            const facultyIds = facultyInDept.map(f => f._id);
+            // Coordinator sees their department's data
+            mainQuery = {
+                $or: [
+                    { faculty: { $in: facultyIds } },
+                    { department: user.department }
+                ]
+            };
+            instQuery = { department: user.department };
+        } else if (user.role === 'admin') {
+            mainQuery = {}; // Admin sees everything
+            instQuery = {};
         }
-
-        const institutionalEventsQuery = user.role === 'coordinator' ? { department: user.department } : {};
-        console.log('📊 Statistics Query (Non-Admin):');
-        console.log('  User role:', user.role);
-        console.log('  Main Query:', JSON.stringify(query));
-        console.log('  Inst Event Query:', JSON.stringify(institutionalEventsQuery));
 
         const [
             researchCount,
@@ -603,14 +576,20 @@ router.get('/statistics', verifyToken, checkRole(['faculty', 'coordinator', 'adm
             eventsCount,
             institutionalEventsCount
         ] = await Promise.all([
-            ResearchPublication.countDocuments(query),
-            ProfessionalDevelopment.countDocuments(query),
-            CourseTaught.countDocuments(query),
-            EventOrganized.countDocuments(query),
-            InstitutionalEvent.countDocuments(institutionalEventsQuery)
+            ResearchPublication.countDocuments(mainQuery),
+            ProfessionalDevelopment.countDocuments(mainQuery),
+            CourseTaught.countDocuments(mainQuery),
+            EventOrganized.countDocuments(mainQuery),
+            InstitutionalEvent.countDocuments(instQuery)
         ]);
 
-        console.log('  Institutional Events Count:', institutionalEventsCount);
+        console.log(`📊 Stats for ${user.email} (${user.role}):`, {
+            research: researchCount,
+            pd: pdCount,
+            courses: coursesCount,
+            events: eventsCount,
+            inst: institutionalEventsCount
+        });
 
         res.json({
             research: researchCount,
