@@ -546,6 +546,32 @@ router.get('/statistics', verifyToken, checkRole(['faculty', 'coordinator', 'adm
         const User = (await import('../models/User.js')).default;
         const user = await User.findById(req.userId);
 
+        // Admin sees ALL data - Simplified logic
+        if (user.role === 'admin') {
+            console.log('📊 Admin Statistics Request - Fetching ALL counts');
+            const [
+                researchCount,
+                pdCount,
+                coursesCount,
+                eventsCount,
+                institutionalEventsCount
+            ] = await Promise.all([
+                ResearchPublication.countDocuments({}),
+                ProfessionalDevelopment.countDocuments({}),
+                CourseTaught.countDocuments({}),
+                EventOrganized.countDocuments({}),
+                InstitutionalEvent.countDocuments({})
+            ]);
+
+            return res.json({
+                research: researchCount,
+                professionalDevelopment: pdCount,
+                courses: coursesCount,
+                events: eventsCount,
+                institutionalEvents: institutionalEventsCount
+            });
+        }
+
         let facultyId = req.userId;
         let facultyIds = [req.userId];
 
@@ -562,12 +588,10 @@ router.get('/statistics', verifyToken, checkRole(['faculty', 'coordinator', 'adm
             // Coordinator sees their department faculty AND themselves (if they created any)
             facultyIds.push(req.userId);
             query = { faculty: { $in: facultyIds } };
-        } else if (user.role === 'admin') {
-            query = {}; // Admin sees ALL data
         }
 
         const institutionalEventsQuery = user.role === 'coordinator' ? { department: user.department } : {};
-        console.log('📊 Statistics Query:');
+        console.log('📊 Statistics Query (Non-Admin):');
         console.log('  User role:', user.role);
         console.log('  Main Query:', JSON.stringify(query));
         console.log('  Inst Event Query:', JSON.stringify(institutionalEventsQuery));
