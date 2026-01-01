@@ -252,7 +252,7 @@ export default function SignupPage() {
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  placeholder="Enter password (minimum 6 characters)"
+                  placeholder="Enter password"
                   className="w-full"
                 />
                 <p className="text-xs text-gray-500 mt-1">
