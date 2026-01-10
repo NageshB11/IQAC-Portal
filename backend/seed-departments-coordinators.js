@@ -8,19 +8,14 @@ dotenv.config();
 const DEPARTMENTS = [
     { name: 'Computer Science & Engineering', code: 'CSE', email: 'cse.coord@iqac.edu', password: 'cse123' },
     { name: 'Information Technology', code: 'IT', email: 'it.coord@iqac.edu', password: 'it123' },
-    { name: 'Electronics & Telecommunication', code: 'ENTC', email: 'entc.coord@iqac.edu', password: 'entc123' },
-    { name: 'Electrical Engineering', code: 'EEE', email: 'eee.coord@iqac.edu', password: 'eee123' },
     { name: 'Mechanical Engineering', code: 'ME', email: 'mech.coord@iqac.edu', password: 'mech123' },
-    { name: 'Civil Engineering', code: 'CE', email: 'civil.coord@iqac.edu', password: 'civil123' }
+    { name: 'Civil Engineering', code: 'CE', email: 'civil.coord@iqac.edu', password: 'civil123' },
+    { name: 'Sports', code: 'SPORTS', email: 'sports.coord@iqac.edu', password: 'sports123' }
 ];
 
 async function seedDepartmentsAndCoordinators() {
     try {
-        const MONGODB_URI = process.env.MONGODB_URI;
-        if (!MONGODB_URI) {
-            console.error('✗ MONGODB_URI not set in .env file');
-            process.exit(1);
-        }
+        const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/iqac-portal';
 
         await mongoose.connect(MONGODB_URI);
         console.log('✓ Connected to MongoDB');
@@ -92,7 +87,7 @@ async function seedDepartmentsAndCoordinators() {
 
         console.log('\n=================================');
         console.log('Setup Complete!');
-        console.log('All 6 departments and coordinators are ready.');
+        console.log('All 5 departments and coordinators are ready.');
         console.log('=================================');
 
         await mongoose.disconnect();

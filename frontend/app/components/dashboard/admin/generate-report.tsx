@@ -120,6 +120,7 @@ export default function GenerateReport() {
         { value: 'events', label: 'Events Organized' },
         { value: 'student-achievements', label: 'Student Achievements' },
         { value: 'student-career', label: 'Student Career Progression' },
+        { value: 'sports-achievements', label: 'Sports Achievements' },
         { value: 'all-faculty', label: 'All Faculty Activities' },
         { value: 'all-student', label: 'All Student Activities' },
         { value: 'comprehensive', label: 'Comprehensive Report (All Data)' }

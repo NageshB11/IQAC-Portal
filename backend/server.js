@@ -15,6 +15,7 @@ import timetableRoutes from './routes/timetable.js';
 import activityLogRoutes from './routes/activity-logs.js';
 import downloadRoutes from './routes/downloads.js';
 import debugRoutes from './routes/debug.js';
+import sportsRoutes from './routes/sports.js';
 
 dotenv.config();
 
@@ -96,6 +97,7 @@ app.use('/api/timetable', timetableRoutes);
 app.use('/api/activity-logs', activityLogRoutes);
 app.use('/api/downloads', downloadRoutes);
 app.use('/api/debug', debugRoutes);
+app.use('/api/sports', sportsRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

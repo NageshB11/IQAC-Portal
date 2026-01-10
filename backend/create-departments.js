@@ -7,7 +7,6 @@ const departments = [
     { name: 'Computer Science & Engineering', code: 'CSE', description: 'Department of Computer Science and Engineering' },
     { name: 'Information Technology', code: 'IT', description: 'Department of Information Technology' },
     { name: 'Electronics & Telecommunication', code: 'ENTC', description: 'Department of Electronics and Telecommunication' },
-    { name: 'Electrical Engineering', code: 'EEE', description: 'Department of Electrical and Electronics Engineering' },
     { name: 'Mechanical Engineering', code: 'ME', description: 'Department of Mechanical Engineering' },
     { name: 'Civil Engineering', code: 'CE', description: 'Department of Civil Engineering' }
 ];

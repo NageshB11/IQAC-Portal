@@ -3,11 +3,10 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/app/components/ui/button'
-import { Input } from '@/app/components/ui/input'
-import Navbar from '@/app/components/navbar'
+import { motion } from 'framer-motion'
+import { Loader2, User, Mail, Lock, Building2, GraduationCap, Briefcase, UserPlus } from 'lucide-react'
 
-type UserRole = 'coordinator' | 'faculty' | 'student'
+type UserRole = 'coordinator' | 'faculty' | 'student' | 'sports'
 
 export default function SignupPage() {
   const router = useRouter()
@@ -17,8 +16,8 @@ export default function SignupPage() {
     lastName: '',
     email: '',
     department: '',
-    enrollmentNumber: '',
-    phoneNumber: '',
+    prnNumber: '',
+    designation: '',
     password: '',
     confirmPassword: '',
   })
@@ -67,15 +66,13 @@ export default function SignupPage() {
         email: formData.email,
         password: formData.password,
         role: selectedRole,
+        department: formData.department
       }
 
       if (selectedRole === 'student') {
-        payload.enrollmentNumber = formData.enrollmentNumber
-        payload.phoneNumber = formData.phoneNumber
-        payload.department = formData.department
-      } else {
-        payload.department = formData.department
-        payload.phoneNumber = formData.phoneNumber
+        payload.prnNumber = formData.prnNumber
+      } else if (selectedRole === 'faculty') {
+        payload.designation = formData.designation
       }
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/auth/signup`, {
@@ -110,194 +107,227 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <Navbar />
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4 py-12">
+      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-20"></div>
 
-      <div className="min-h-[calc(100vh-64px)] flex items-center justify-center p-4 py-12">
-        <div className="w-full max-w-md">
-          <div className="bg-white border border-gray-200 rounded-lg p-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
-            <p className="text-gray-600 mb-6">Join our platform</p>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-md w-full bg-slate-950/50 backdrop-blur-xl border border-slate-800 p-8 rounded-2xl shadow-xl relative z-10"
+      >
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-2xl mx-auto flex items-center justify-center mb-4 shadow-lg shadow-blue-500/20">
+            <span className="text-3xl font-bold text-white">IQ</span>
+          </div>
+          <h1 className="text-2xl font-bold text-white mb-2">Create Account</h1>
+          <p className="text-slate-400 text-sm">Join our platform</p>
+        </div>
 
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-                {error}
-              </div>
-            )}
+        {error && (
+          <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-500 text-sm text-center mb-6">
+            {error}
+          </div>
+        )}
 
-            <form onSubmit={handleSignup} className="space-y-4">
-              {/* Role Selection */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Select your role
-                </label>
-                <select
-                  value={selectedRole || ''}
-                  onChange={(e) => setSelectedRole(e.target.value as UserRole)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">-- Choose a role --</option>
-                  <option value="coordinator">Coordinator</option>
-                  <option value="faculty">Faculty</option>
-                  <option value="student">Student</option>
-                </select>
-              </div>
+        <form onSubmit={handleSignup} className="space-y-4">
+          {/* Role Selection */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-slate-300">Select Role</label>
+            <div className="relative">
+              <UserPlus className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
+              <select
+                value={selectedRole || ''}
+                onChange={(e) => setSelectedRole(e.target.value as UserRole)}
+                className="w-full bg-slate-900 border border-slate-800 rounded-lg py-3 pl-10 pr-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all appearance-none cursor-pointer"
+              >
+                <option value="" className="bg-slate-900">-- Choose a role --</option>
+                <option value="coordinator" className="bg-slate-900">Coordinator</option>
+                <option value="faculty" className="bg-slate-900">Faculty</option>
+                <option value="student" className="bg-slate-900">Student</option>
+                <option value="sports" className="bg-slate-900">Sports</option>
+              </select>
+            </div>
+          </div>
 
-              {/* First Name */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  First Name
-                </label>
-                <Input
+          <div className="grid grid-cols-2 gap-4">
+            {/* First Name */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-slate-300">First Name</label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-4 h-4" />
+                <input
                   type="text"
                   name="firstName"
                   value={formData.firstName}
                   onChange={handleInputChange}
-                  placeholder="Enter first name"
-                  className="w-full"
+                  placeholder="First Name"
+                  className="w-full bg-slate-900 border border-slate-800 rounded-lg py-3 pl-9 pr-4 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-sm"
                 />
               </div>
+            </div>
 
-              {/* Last Name */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Last Name
-                </label>
-                <Input
+            {/* Last Name */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-slate-300">Last Name</label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-4 h-4" />
+                <input
                   type="text"
                   name="lastName"
                   value={formData.lastName}
                   onChange={handleInputChange}
-                  placeholder="Enter last name"
-                  className="w-full"
+                  placeholder="Last Name"
+                  className="w-full bg-slate-900 border border-slate-800 rounded-lg py-3 pl-9 pr-4 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-sm"
                 />
               </div>
-
-              {/* Email */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email
-                </label>
-                <Input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="Enter email"
-                  className="w-full"
-                />
-              </div>
-
-              {/* Department (All Roles) */}
-              {selectedRole && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Department
-                  </label>
-                  <select
-                    name="department"
-                    value={formData.department}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">-- Select Department --</option>
-                    {departments.map((dept: any) => (
-                      <option key={dept._id} value={dept._id}>
-                        {dept.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-
-              {/* Enrollment Number (Student) */}
-              {selectedRole === 'student' && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Enrollment Number
-                  </label>
-                  <Input
-                    type="text"
-                    name="enrollmentNumber"
-                    value={formData.enrollmentNumber}
-                    onChange={handleInputChange}
-                    placeholder="Enter enrollment number"
-                    className="w-full"
-                  />
-                </div>
-              )}
-
-              {/* Phone Number */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Phone Number
-                </label>
-                <Input
-                  type="tel"
-                  name="phoneNumber"
-                  value={formData.phoneNumber}
-                  onChange={handleInputChange}
-                  placeholder="Enter phone number"
-                  className="w-full"
-                />
-              </div>
-
-              {/* Password */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Password
-                </label>
-                <Input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  placeholder="Enter password"
-                  className="w-full"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  {selectedRole === 'coordinator' ?
-                    'Choose a strong password. Your unique department username will be provided after signup.' :
-                    'Choose a strong password for your account'
-                  }
-                </p>
-              </div>
-
-              {/* Confirm Password */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Confirm Password
-                </label>
-                <Input
-                  type="password"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  placeholder="Confirm password"
-                  className="w-full"
-                />
-              </div>
-
-              {/* Signup Button */}
-              <Button
-                type="submit"
-                disabled={loading || !selectedRole}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 font-medium"
-              >
-                {loading ? 'Creating account...' : 'Create Account'}
-              </Button>
-            </form>
-
-            {/* Login Link */}
-            <p className="text-center text-gray-600 mt-6">
-              Already have an account?{' '}
-              <Link href="/login" className="text-blue-600 hover:text-blue-700 font-medium">
-                Login here
-              </Link>
-            </p>
+            </div>
           </div>
+
+          {/* Email */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-slate-300">Email</label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                placeholder="name@example.com"
+                className="w-full bg-slate-900 border border-slate-800 rounded-lg py-3 pl-10 pr-4 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
+              />
+            </div>
+          </div>
+
+          {/* Department (All Roles except Sports) */}
+          {selectedRole && selectedRole !== 'sports' && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-slate-300">Department</label>
+              <div className="relative">
+                <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
+                <select
+                  name="department"
+                  value={formData.department}
+                  onChange={handleInputChange}
+                  className="w-full bg-slate-900 border border-slate-800 rounded-lg py-3 pl-10 pr-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all appearance-none cursor-pointer"
+                >
+                  <option value="" className="bg-slate-900">-- Select Department --</option>
+                  {departments.map((dept: any) => (
+                    <option key={dept._id} value={dept._id} className="bg-slate-900">
+                      {dept.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
+
+          {/* PRN Number (Student) */}
+          {selectedRole === 'student' && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-slate-300">PRN Number</label>
+              <div className="relative">
+                <GraduationCap className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
+                <input
+                  type="text"
+                  name="prnNumber"
+                  value={formData.prnNumber}
+                  onChange={handleInputChange}
+                  placeholder="Enter PRN Number"
+                  className="w-full bg-slate-900 border border-slate-800 rounded-lg py-3 pl-10 pr-4 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Designation (Faculty) */}
+          {selectedRole === 'faculty' && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-slate-300">Designation</label>
+              <div className="relative">
+                <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
+                <select
+                  name="designation"
+                  value={formData.designation}
+                  onChange={handleInputChange}
+                  className="w-full bg-slate-900 border border-slate-800 rounded-lg py-3 pl-10 pr-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all appearance-none cursor-pointer"
+                >
+                  <option value="" className="bg-slate-900">-- Select Designation --</option>
+                  <option value="Professor" className="bg-slate-900">Professor</option>
+                  <option value="Associate Professor" className="bg-slate-900">Associate Professor</option>
+                  <option value="Assistant Professor" className="bg-slate-900">Assistant Professor</option>
+                  <option value="Head of Department" className="bg-slate-900">Head of Department (HOD)</option>
+                  <option value="Principal" className="bg-slate-900">Principal</option>
+                  <option value="Lecturer" className="bg-slate-900">Lecturer</option>
+                  <option value="Lab Assistant" className="bg-slate-900">Lab Assistant</option>
+                </select>
+              </div>
+            </div>
+          )}
+
+          {/* Password */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-slate-300">Password</label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                placeholder="••••••••"
+                className="w-full bg-slate-900 border border-slate-800 rounded-lg py-3 pl-10 pr-4 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
+              />
+            </div>
+            {selectedRole === 'coordinator' && (
+              <p className="text-xs text-slate-500 mt-1">
+                Your unique department username will be provided after signup.
+              </p>
+            )}
+          </div>
+
+          {/* Confirm Password */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-slate-300">Confirm Password</label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
+              <input
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+                placeholder="••••••••"
+                className="w-full bg-slate-900 border border-slate-800 rounded-lg py-3 pl-10 pr-4 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
+              />
+            </div>
+          </div>
+
+          {/* Signup Button */}
+          <button
+            type="submit"
+            disabled={loading || !selectedRole}
+            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-lg transition-all duration-200 flex items-center justify-center shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                Creating account...
+              </>
+            ) : (
+              'Create Account'
+            )}
+          </button>
+        </form>
+
+        <div className="text-center mt-6">
+          <p className="text-slate-400 text-sm">
+            Already have an account?{' '}
+            <Link href="/login" className="text-blue-400 hover:text-blue-300 font-medium hover:underline">
+              Login here
+            </Link>
+          </p>
         </div>
-      </div>
+      </motion.div>
     </div>
   )
 }

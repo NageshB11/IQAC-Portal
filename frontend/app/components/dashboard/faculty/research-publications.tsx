@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface ResearchPublication {
   _id: string
@@ -12,9 +13,6 @@ interface ResearchPublication {
   doi?: string
   issn?: string
   isbn?: string
-  impactFactor?: number
-  indexing?: string[]
-  citationCount: number
   documentUrl?: string
   status: string
   createdAt: string
@@ -37,9 +35,7 @@ export default function ResearchPublications() {
     doi: '',
     issn: '',
     isbn: '',
-    impactFactor: '',
-    indexing: [] as string[],
-    citationCount: '0',
+    documentUrl: '',
     file: null as File | null
   })
 
@@ -80,8 +76,6 @@ export default function ResearchPublications() {
     Object.entries(formData).forEach(([key, value]) => {
       if (key === 'file' && value) {
         data.append('document', value as File)
-      } else if (key === 'indexing') {
-        data.append(key, JSON.stringify(value))
       } else if (value !== null && value !== '') {
         data.append(key, value.toString())
       }
@@ -147,12 +141,11 @@ export default function ResearchPublications() {
       doi: publication.doi || '',
       issn: publication.issn || '',
       isbn: publication.isbn || '',
-      impactFactor: publication.impactFactor?.toString() || '',
-      indexing: publication.indexing || [],
-      citationCount: publication.citationCount.toString(),
+      documentUrl: publication.documentUrl || '',
       file: null
     })
     setShowForm(true)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const resetForm = () => {
@@ -165,9 +158,7 @@ export default function ResearchPublications() {
       doi: '',
       issn: '',
       isbn: '',
-      impactFactor: '',
-      indexing: [],
-      citationCount: '0',
+      documentUrl: '',
       file: null
     })
     setEditingId(null)
@@ -175,260 +166,297 @@ export default function ResearchPublications() {
     setError('')
   }
 
-  const handleIndexingChange = (value: string) => {
-    const current = formData.indexing
-    if (current.includes(value)) {
-      setFormData({ ...formData, indexing: current.filter(i => i !== value) })
-    } else {
-      setFormData({ ...formData, indexing: [...current, value] })
-    }
-  }
-
-  if (loading) return <div className="text-center py-8">Loading...</div>
+  if (loading) return (
+    <div className="flex justify-center items-center py-12">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+    </div>
+  )
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-900">Research Publications</h2>
+    <div className="space-y-8 animate-fade-in">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div>
+          <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Research Publications</h2>
+          <p className="text-gray-500 mt-1">Manage your research portfolio and scholarly works</p>
+        </div>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
+          className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-200 flex items-center gap-2 shadow-sm ${showForm
+            ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            : 'bg-purple-600 text-white hover:bg-purple-700 hover:shadow-purple-200'
+            }`}
         >
-          {showForm ? 'Cancel' : '+ Add Publication'}
+          {showForm ? 'Cancel' : (
+            <>
+              <span>+</span> Add Publication
+            </>
+          )}
         </button>
       </div>
 
-      {error && (
-        <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
-          {error}
-        </div>
-      )}
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl flex items-center gap-3"
+          >
+            <span className="text-xl">⚠️</span>
+            {error}
+          </motion.div>
+        )}
 
-      {success && (
-        <div className="p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg">
-          {success}
-        </div>
-      )}
+        {success && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="p-4 bg-green-50 border border-green-200 text-green-700 rounded-xl flex items-center gap-3"
+          >
+            <span className="text-xl">✅</span>
+            {success}
+          </motion.div>
+        )}
 
-      {showForm && (
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-xl font-bold mb-4">{editingId ? 'Edit' : 'Add'} Publication</h3>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Title *</label>
-                <input
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  required
-                />
-              </div>
+        {showForm && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-hidden"
+          >
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+              <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                {editingId ? '✏️ Edit' : '✨ Add New'} Publication
+              </h3>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Paper Title <span className="text-red-500">*</span></label>
+                    <input
+                      type="text"
+                      value={formData.title}
+                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                      className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none"
+                      placeholder="Enter the full title of your publication"
+                      required
+                    />
+                  </div>
 
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Authors *</label>
-                <input
-                  type="text"
-                  value={formData.authors}
-                  onChange={(e) => setFormData({ ...formData, authors: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  placeholder="Comma separated names"
-                  required
-                />
-              </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Authors <span className="text-red-500">*</span></label>
+                    <input
+                      type="text"
+                      value={formData.authors}
+                      onChange={(e) => setFormData({ ...formData, authors: e.target.value })}
+                      className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none"
+                      placeholder="e.g. Smith J., Doe A."
+                      required
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Journal/Conference *</label>
-                <input
-                  type="text"
-                  value={formData.journalConference}
-                  onChange={(e) => setFormData({ ...formData, journalConference: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  required
-                />
-              </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Journal/Conference Name <span className="text-red-500">*</span></label>
+                    <input
+                      type="text"
+                      value={formData.journalConference}
+                      onChange={(e) => setFormData({ ...formData, journalConference: e.target.value })}
+                      className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none"
+                      placeholder="e.g. IEEE Transactions on..."
+                      required
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Publication Type *</label>
-                <select
-                  value={formData.publicationType}
-                  onChange={(e) => setFormData({ ...formData, publicationType: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  required
-                >
-                  <option value="journal">Journal</option>
-                  <option value="conference">Conference</option>
-                  <option value="book">Book</option>
-                  <option value="chapter">Book Chapter</option>
-                  <option value="patent">Patent</option>
-                </select>
-              </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Publication Type <span className="text-red-500">*</span></label>
+                    <div className="relative">
+                      <select
+                        value={formData.publicationType}
+                        onChange={(e) => setFormData({ ...formData, publicationType: e.target.value })}
+                        className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none appearance-none cursor-pointer"
+                        required
+                      >
+                        <option value="journal">Journal Article</option>
+                        <option value="conference">Conference Paper</option>
+                        <option value="book">Book</option>
+                        <option value="chapter">Book Chapter</option>
+                        <option value="patent">Patent</option>
+                      </select>
+                      <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-500">
+                        ▼
+                      </div>
+                    </div>
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Publication Date *</label>
-                <input
-                  type="date"
-                  value={formData.publicationDate}
-                  onChange={(e) => setFormData({ ...formData, publicationDate: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  required
-                />
-              </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Publication Date <span className="text-red-500">*</span></label>
+                    <input
+                      type="date"
+                      value={formData.publicationDate}
+                      onChange={(e) => setFormData({ ...formData, publicationDate: e.target.value })}
+                      className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none"
+                      required
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">DOI</label>
-                <input
-                  type="text"
-                  value={formData.doi}
-                  onChange={(e) => setFormData({ ...formData, doi: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                />
-              </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">DOI (Optional)</label>
+                    <input
+                      type="text"
+                      value={formData.doi}
+                      onChange={(e) => setFormData({ ...formData, doi: e.target.value })}
+                      className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none font-mono text-sm"
+                      placeholder="10.xxxx/xxxxx"
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">ISSN/ISBN</label>
-                <input
-                  type="text"
-                  value={formData.issn || formData.isbn}
-                  onChange={(e) => setFormData({ ...formData, issn: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                />
-              </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">ISSN/ISBN (Optional)</label>
+                    <input
+                      type="text"
+                      value={formData.issn || formData.isbn}
+                      onChange={(e) => setFormData({ ...formData, issn: e.target.value })}
+                      className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none font-mono text-sm"
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Impact Factor</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={formData.impactFactor}
-                  onChange={(e) => setFormData({ ...formData, impactFactor: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                />
-              </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Resources (Optional)</label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <input
+                          type="url"
+                          value={formData.documentUrl}
+                          onChange={(e) => setFormData({ ...formData, documentUrl: e.target.value })}
+                          className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none text-sm"
+                          placeholder="Paste Link (URL) here..."
+                        />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-400 font-medium">OR</span>
+                        <input
+                          type="file"
+                          accept=".pdf"
+                          onChange={(e) => setFormData({ ...formData, file: e.target.files?.[0] || null })}
+                          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 transition-all cursor-pointer"
+                        />
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-2">Provide a direct link to the publication OR upload a PDF copy.</p>
+                  </div>
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Citation Count</label>
-                <input
-                  type="number"
-                  value={formData.citationCount}
-                  onChange={(e) => setFormData({ ...formData, citationCount: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                />
-              </div>
+                <div className="flex gap-4 pt-4 border-t border-gray-100">
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="flex-1 bg-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-purple-700 focus:ring-4 focus:ring-purple-200 transition-all disabled:opacity-70 disabled:cursor-not-allowed shadow-lg shadow-purple-200"
+                  >
+                    {submitting ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+                        Saving...
+                      </span>
+                    ) : (editingId ? 'Update Publication' : 'Save Publication')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={resetForm}
+                    className="px-6 py-3 rounded-xl font-semibold text-gray-600 hover:bg-gray-100 transition-all border border-gray-200"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Indexing</label>
-                <div className="flex flex-wrap gap-3">
-                  {['scopus', 'sci', 'web-of-science', 'ugc-care'].map(idx => (
-                    <label key={idx} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={formData.indexing.includes(idx)}
-                        onChange={() => handleIndexingChange(idx)}
-                        className="mr-2"
-                      />
-                      <span className="text-sm capitalize">{idx.replace('-', ' ')}</span>
-                    </label>
-                  ))}
+      <div className="grid grid-cols-1 gap-6">
+        {publications.length === 0 ? (
+          <div className="bg-white rounded-2xl p-12 text-center border-2 border-dashed border-gray-200">
+            <div className="text-6xl mb-4">📚</div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">No Publications Yet</h3>
+            <p className="text-gray-500 mb-6 max-w-md mx-auto">Start building your research portfolio by adding your journal articles, conference papers, and book chapters.</p>
+            <button
+              onClick={() => setShowForm(true)}
+              className="bg-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-purple-700 transition shadow-lg shadow-purple-200"
+            >
+              Add Your First Publication
+            </button>
+          </div>
+        ) : (
+          publications.map((pub) => (
+            <motion.div
+              layout
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              key={pub._id}
+              className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg hover:border-purple-100 transition-all group"
+            >
+              <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+                <div className="space-y-3 flex-1">
+                  <div className="flex items-center gap-3">
+                    <span className={`px-3 py-1 text-xs font-bold rounded-full uppercase tracking-wide
+                      ${pub.publicationType === 'journal' ? 'bg-blue-100 text-blue-700' :
+                        pub.publicationType === 'conference' ? 'bg-orange-100 text-orange-700' :
+                          'bg-gray-100 text-gray-700'}`}>
+                      {pub.publicationType}
+                    </span>
+                    <span className="text-sm text-gray-500 flex items-center gap-1">
+                      🗓 {new Date(pub.publicationDate).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl font-bold text-gray-900 leading-tight group-hover:text-purple-700 transition-colors">
+                    {pub.title}
+                  </h3>
+
+                  <div className="text-sm text-gray-600 flex flex-wrap gap-y-1 gap-x-4">
+                    <span className="flex items-center gap-1">
+                      <span className="text-gray-400">By:</span>
+                      <span className="font-medium">{pub.authors}</span>
+                    </span>
+                    <span className="flex items-center gap-1 text-gray-400">|</span>
+                    <span className="font-medium text-gray-800 italic">{pub.journalConference}</span>
+                  </div>
+
+                  <div className="flex flex-wrap gap-3 pt-2">
+                    {pub.doi && (
+                      <a href={`https://doi.org/${pub.doi.replace('doi:', '')}`} target="_blank" rel="noopener noreferrer"
+                        className="text-xs bg-gray-50 hover:bg-yellow-50 text-gray-600 hover:text-yellow-700 px-3 py-1.5 rounded-lg border border-gray-200 transition-colors flex items-center gap-1">
+                        🔗 DOI: {pub.doi}
+                      </a>
+                    )}
+                    {pub.documentUrl && (
+                      <a href={pub.documentUrl} target="_blank" rel="noopener noreferrer"
+                        className="text-xs bg-gray-50 hover:bg-blue-50 text-gray-600 hover:text-blue-700 px-3 py-1.5 rounded-lg border border-gray-200 transition-colors flex items-center gap-1">
+                        📄 View Document
+                      </a>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex flex-row md:flex-col gap-2 min-w-[100px] justify-end">
+                  <button
+                    onClick={() => handleEdit(pub)}
+                    className="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(pub._id)}
+                    className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
-
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Upload Document (PDF)</label>
-                <input
-                  type="file"
-                  accept=".pdf"
-                  onChange={(e) => setFormData({ ...formData, file: e.target.files?.[0] || null })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                />
-              </div>
-            </div>
-
-            <div className="flex gap-3">
-              <button
-                type="submit"
-                disabled={submitting}
-                className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {submitting ? 'Saving...' : (editingId ? 'Update' : 'Add')} Publication
-              </button>
-              <button
-                type="button"
-                onClick={resetForm}
-                className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Journal/Conference</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Citations</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {publications.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
-                    No publications added yet. Click "Add Publication" to get started.
-                  </td>
-                </tr>
-              ) : (
-                publications.map((pub) => (
-                  <tr key={pub._id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900">{pub.title}</div>
-                      <div className="text-xs text-gray-500">{pub.authors}</div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-900 capitalize">{pub.publicationType}</td>
-                    <td className="px-6 py-4 text-sm text-gray-900">{pub.journalConference}</td>
-                    <td className="px-6 py-4 text-sm text-gray-900">
-                      {new Date(pub.publicationDate).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-900">{pub.citationCount}</td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2 py-1 text-xs rounded-full ${pub.status === 'approved' ? 'bg-green-100 text-green-700' :
-                          pub.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                            'bg-red-100 text-red-700'
-                        }`}>
-                        {pub.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm">
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleEdit(pub)}
-                          className="text-blue-600 hover:text-blue-800"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(pub._id)}
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+            </motion.div>
+          ))
+        )}
       </div>
     </div>
   )

@@ -189,14 +189,7 @@ export default function FacultyActivitiesView() {
                     <div className="p-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {renderField('Faculty', `${activity.faculty?.firstName} ${activity.faculty?.lastName}`)}
-                            {renderField('Status', (
-                                <span className={`px-2 py-1 text-xs rounded-full uppercase ${activity.status === 'approved' ? 'bg-green-100 text-green-700' :
-                                    activity.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                                        'bg-red-100 text-red-700'
-                                    }`}>
-                                    {activity.status}
-                                </span>
-                            ))}
+
                         </div>
                         <hr className="my-4" />
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -267,7 +260,7 @@ export default function FacultyActivitiesView() {
                                         <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
                                         <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Journal/Conference</th>
                                         <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
@@ -286,14 +279,7 @@ export default function FacultyActivitiesView() {
                                             <td className="px-4 py-3 text-sm">
                                                 {new Date(item.publicationDate).toLocaleDateString()}
                                             </td>
-                                            <td className="px-4 py-3">
-                                                <span className={`px-2 py-1 text-xs rounded-full ${item.status === 'approved' ? 'bg-green-100 text-green-700' :
-                                                    item.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                                                        'bg-red-100 text-red-700'
-                                                    }`}>
-                                                    {item.status}
-                                                </span>
-                                            </td>
+
                                         </tr>
                                     ))}
                                 </tbody>
@@ -357,12 +343,7 @@ export default function FacultyActivitiesView() {
                                         className="border rounded-lg p-4 cursor-pointer hover:shadow-md transition"
                                     >
                                         <div className="flex justify-between items-start mb-2">
-                                            <span className={`px-2 py-1 text-xs rounded-full ${item.status === 'approved' ? 'bg-green-100 text-green-700' :
-                                                item.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                                                    'bg-red-100 text-red-700'
-                                                }`}>
-                                                {item.status}
-                                            </span>
+
                                             <span className="px-2 py-1 text-xs bg-orange-100 text-orange-700 rounded-full capitalize">
                                                 {item.eventType}
                                             </span>

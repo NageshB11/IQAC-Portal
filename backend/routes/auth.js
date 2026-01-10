@@ -86,9 +86,9 @@ router.post('/admin-login', async (req, res) => {
 // Signup for Coordinator, Faculty, Student
 router.post('/signup', async (req, res) => {
   try {
-    const { firstName, lastName, email, password, role, department, phoneNumber, designation, enrollmentNumber } = req.body;
+    const { firstName, lastName, email, password, role, department, designation, prnNumber } = req.body;
 
-    if (!['coordinator', 'faculty', 'student'].includes(role)) {
+    if (!['coordinator', 'faculty', 'student', 'sports'].includes(role)) {
       return res.status(400).json({ message: 'Invalid role' });
     }
 
@@ -115,10 +115,10 @@ router.post('/signup', async (req, res) => {
       password, // Use user-selected password instead of auto-generated
       role,
       ...(coordinatorUsername && { username: coordinatorUsername }),
-      ...(role !== 'student' ? { department } : { department }), // Save department for all roles including student
-      phoneNumber,
+      ...(department && { department }), // Only save department if provided
       designation,
-      enrollmentNumber,
+      prnNumber, // Save PRN number for students
+      enrollmentNumber: prnNumber, // Keeping enrollmentNumber populated with PRN for backward compatibility
       isApproved: true // Auto-approve all new users (remove pending approval)
     });
 
@@ -170,7 +170,10 @@ router.post('/login', async (req, res) => {
     if (role === 'coordinator' && username) {
       user = await User.findOne({ username, role });
     } else if (email) {
-      user = await User.findOne({ email, role });
+      user = await User.findOne({
+        email: { $regex: new RegExp(`^${email.trim()}$`, 'i') },
+        role
+      });
     } else {
       return res.status(400).json({ message: 'Email or username required' });
     }
@@ -206,6 +209,35 @@ router.post('/login', async (req, res) => {
     });
   } catch (error) {
     console.error('Login error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Direct Password Reset (Insecure/Demo mode as requested)
+router.post('/direct-reset-password', async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+
+    if (!email || !newPassword) {
+      return res.status(400).json({ message: 'Email and new password are required' });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User with this email does not exist' });
+    }
+
+    user.password = newPassword;
+    // Clear any previous reset tokens if they existed
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+
+    await user.save();
+
+    res.json({ message: 'Password has been updated successfully' });
+
+  } catch (error) {
+    console.error('Direct reset password error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });

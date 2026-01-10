@@ -109,17 +109,20 @@ export default function CoordinatorOverview() {
   const mainStats = [
     { label: 'Faculty Members', value: stats.totalFaculty, icon: '👨‍🏫', color: 'bg-blue-500', onClick: () => router.push('/dashboard/coordinator?tab=faculty') },
     { label: 'Students', value: stats.totalStudents, icon: '🎓', color: 'bg-green-500', onClick: () => router.push('/dashboard/coordinator?tab=students') },
-    { label: 'Pending Reviews', value: stats.pendingReviews, icon: '⏳', color: 'bg-orange-500', onClick: () => router.push('/dashboard/coordinator?tab=documents') },
-    { label: 'Total Documents', value: stats.totalDocuments, icon: '📄', color: 'bg-purple-500', onClick: () => router.push('/dashboard/coordinator?tab=documents') },
+
+
   ]
+
+  const documentStats = [
+    { label: 'Total Documents', value: stats.totalDocuments, icon: '📄', color: 'text-blue-600' },
+  ]
+
 
   const activityStats = [
     { label: 'Research', value: stats.researchPublications, icon: '📚', color: 'text-blue-600' },
     { label: 'Courses', value: stats.courses, icon: '📖', color: 'text-green-600' },
     { label: 'Events', value: stats.events, icon: '🎪', color: 'text-purple-600' },
     { label: 'Workshops', value: stats.workshops, icon: '🎯', color: 'text-orange-600' },
-    { label: 'Approved', value: stats.approvedDocuments, icon: '✅', color: 'text-green-600' },
-    { label: 'Rejected', value: stats.rejectedDocuments, icon: '❌', color: 'text-red-600' },
     { label: 'Feedback', value: stats.totalFeedback, icon: '💬', color: 'text-indigo-600' },
   ]
 
@@ -176,53 +179,7 @@ export default function CoordinatorOverview() {
       {/* Two Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Pending Documents */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-bold text-gray-900">Pending Reviews</h3>
-            <button
-              onClick={() => router.push('/dashboard/coordinator?tab=documents')}
-              className="text-sm text-blue-600 hover:underline"
-            >
-              View All →
-            </button>
-          </div>
-          {recentDocs.length === 0 ? (
-            <div className="text-center py-8">
-              <div className="text-5xl mb-3">✅</div>
-              <p className="text-gray-500">All caught up! No pending reviews.</p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {recentDocs.map((doc) => (
-                <div
-                  key={doc._id}
-                  className="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition cursor-pointer"
-                  onClick={() => router.push('/dashboard/coordinator?tab=documents')}
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <p className="font-medium text-gray-900">{doc.title}</p>
-                      <p className="text-sm text-gray-600 mt-1">
-                        {doc.uploadedBy ? `${doc.uploadedBy.firstName} ${doc.uploadedBy.lastName}` : 'Unknown'}
-                        {doc.uploadedBy?.role && (
-                          <span className="ml-2 text-xs px-2 py-0.5 bg-blue-100 text-blue-700 rounded capitalize">
-                            {doc.uploadedBy.role}
-                          </span>
-                        )}
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {new Date(doc.createdAt).toLocaleDateString()} • {doc.documentType}
-                      </p>
-                    </div>
-                    <span className="text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-700 ml-2">
-                      Pending
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+
 
         {/* Recent Feedback */}
         <div className="bg-white rounded-lg shadow-md p-6">
@@ -253,8 +210,8 @@ export default function CoordinatorOverview() {
                       </p>
                     </div>
                     <div className={`text-2xl ${fb.rating >= 4 ? 'text-green-500' :
-                        fb.rating >= 3 ? 'text-yellow-500' :
-                          'text-red-500'
+                      fb.rating >= 3 ? 'text-yellow-500' :
+                        'text-red-500'
                       }`}>
                       {'⭐'.repeat(fb.rating || 0)}
                     </div>

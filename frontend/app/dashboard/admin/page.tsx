@@ -6,11 +6,12 @@ import AdminSidebar from '@/components/dashboard/admin-sidebar'
 import DashboardOverview from '@/components/dashboard/admin/dashboard-overview'
 import UserManagement from '@/components/dashboard/admin/user-management'
 import DepartmentManagement from '@/components/dashboard/admin/department-management'
-import DocumentApproval from '@/components/dashboard/admin/document-approval'
+
 import AnnouncementManagement from '@/components/dashboard/admin/announcement-management'
 import FeedbackAnalytics from '@/components/dashboard/admin/feedback-analytics'
-import FacultyActivitiesView from '@/app/components/dashboard/coordinator/faculty-activities-view'
-import StudentActivitiesView from '@/app/components/dashboard/coordinator/student-activities-view'
+import FacultyActivitiesView from '@/app/components/dashboard/admin/admin-faculty-activities'
+import StudentActivitiesView from '@/app/components/dashboard/admin/admin-student-activities'
+import AdminSportsActivities from '@/app/components/dashboard/admin/admin-sports-activities'
 import GenerateReport from '@/components/dashboard/admin/generate-report'
 import ActivityLogsManagement from '@/components/dashboard/admin/activity-logs'
 import DocumentsManagement from '@/components/dashboard/admin/documents-management'
@@ -62,11 +63,12 @@ function AdminDashboardContent() {
             {activeTab === 'overview' && 'Dashboard Overview'}
             {activeTab === 'users' && 'User Management'}
             {activeTab === 'departments' && 'Department Management'}
-            {activeTab === 'approvals' && 'Document Approvals'}
+
             {activeTab === 'announcements' && 'Announcements'}
             {activeTab === 'feedback' && 'Feedback Analytics'}
             {activeTab === 'faculty-activities' && 'Faculty Activities'}
             {activeTab === 'student-activities' && 'Student Activities'}
+            {activeTab === 'sports' && 'Sports Activities'}
             {activeTab === 'reports' && 'Generate Report'}
             {activeTab === 'activity-logs' && 'Activity Logs'}
             {activeTab === 'documents' && 'Documents Management'}
@@ -90,11 +92,12 @@ function AdminDashboardContent() {
           {activeTab === 'overview' && <DashboardOverview />}
           {activeTab === 'users' && <UserManagement />}
           {activeTab === 'departments' && <DepartmentManagement />}
-          {activeTab === 'approvals' && <DocumentApproval />}
+
           {activeTab === 'announcements' && <AnnouncementManagement />}
           {activeTab === 'feedback' && <FeedbackAnalytics />}
           {activeTab === 'faculty-activities' && <FacultyActivitiesView />}
           {activeTab === 'student-activities' && <StudentActivitiesView />}
+          {activeTab === 'sports' && <AdminSportsActivities />}
           {activeTab === 'reports' && <GenerateReport />}
           {activeTab === 'activity-logs' && <ActivityLogsManagement />}
           {activeTab === 'documents' && <DocumentsManagement />}

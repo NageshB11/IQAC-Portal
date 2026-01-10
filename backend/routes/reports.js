@@ -417,14 +417,15 @@ router.get('/generate', verifyToken, checkRole(['coordinator', 'admin']), async 
 
             switch (activityType) {
                 case 'research':
-                    const researchHeaders = ['#', 'Faculty', 'Designation', 'Title', 'Journal', 'Date', 'Link'];
+                    const researchHeaders = ['#', 'Title of Paper', 'Authors', 'Department', 'Journal', 'Year', 'ISSN', 'Link'];
                     const researchRows = reportData.map((item, index) => [
                         (index + 1).toString(),
-                        `${item.faculty?.firstName || ''} ${item.faculty?.lastName || ''}`.trim() || 'N/A',
-                        item.faculty?.designation || 'N/A',
                         item.title?.substring(0, 30) + '...' || 'N/A',
-                        item.journalName?.substring(0, 20) + '...' || 'N/A',
-                        formatDate(item.publicationDate),
+                        item.authors || 'N/A',
+                        item.faculty?.department?.name || 'N/A',
+                        item.journalConference?.substring(0, 20) + '...' || 'N/A',
+                        new Date(item.publicationDate).getFullYear().toString(),
+                        item.issn || item.isbn || 'N/A',
                         item.documentUrl ? { text: 'View', link: item.documentUrl } : 'N/A'
                     ]);
                     addTableToPDF(doc, researchHeaders, researchRows);

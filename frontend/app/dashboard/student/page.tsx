@@ -7,7 +7,6 @@ import StudentOverview from '@/app/components/dashboard/student/overview'
 import FeedbackForm from '@/app/components/dashboard/student/feedback-form'
 import MyFeedback from '@/app/components/dashboard/student/my-feedback'
 import StudentAnnouncements from '@/app/components/dashboard/student/announcements'
-import AcademicInfo from '@/app/components/dashboard/student/academic-info'
 import Achievements from '@/app/components/dashboard/student/achievements'
 import StudentProfile from '@/app/components/dashboard/student/profile'
 
@@ -56,9 +55,7 @@ function StudentDashboardContent() {
         <div className="bg-white border-b border-gray-200 px-8 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-900">
             {activeTab === 'overview' && 'My Dashboard'}
-            {activeTab === 'academic' && 'Academic Information'}
             {activeTab === 'achievements' && 'Achievement Submission'}
-            {activeTab === 'career' && 'Career Progression'}
             {activeTab === 'feedback' && 'Submit Feedback'}
             {activeTab === 'my-feedback' && 'My Feedback'}
             {activeTab === 'profile' && 'My Profile'}
@@ -81,9 +78,7 @@ function StudentDashboardContent() {
         {/* Content */}
         <div className="flex-1 overflow-auto p-8">
           {activeTab === 'overview' && <StudentOverview />}
-          {activeTab === 'academic' && <AcademicInfo />}
           {activeTab === 'achievements' && <Achievements />}
-          {activeTab === 'career' && <Achievements />}
           {activeTab === 'feedback' && <FeedbackForm />}
           {activeTab === 'my-feedback' && <MyFeedback />}
           {activeTab === 'profile' && <StudentProfile />}

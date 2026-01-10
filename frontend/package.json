@@ -49,6 +49,7 @@
     "dotenv": "latest",
     "embla-carousel-react": "latest",
     "express": "latest",
+    "framer-motion": "^12.25.0",
     "fs": "latest",
     "input-otp": "latest",
     "jsonwebtoken": "latest",

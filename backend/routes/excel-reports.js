@@ -169,18 +169,16 @@ router.get('/generate-excel', verifyToken, checkRole(['coordinator', 'admin']), 
                 const dataStartRow = addExcelHeader(worksheet, 'Research Publications Report');
 
                 // Define columns
+                // Define columns
                 let columns = [
                     { header: 'Title of Paper', key: 'title', width: 40 },
                     { header: 'Name of the Authors', key: 'authors', width: 30 },
-                    { header: 'Department', key: 'department', width: 25 },
+                    { header: 'Departments of the Teacher', key: 'department', width: 25 },
                     { header: 'Name of Journal', key: 'journal', width: 30 },
                     { header: 'Year of Publication', key: 'year', width: 18 },
-                    { header: 'ISSN No', key: 'issn', width: 15 }
+                    { header: 'ISSN No.', key: 'issn', width: 15 },
+                    { header: 'Link', key: 'link', width: 40 }
                 ];
-
-                if (departmentId) {
-                    columns = columns.filter(col => col.key !== 'department');
-                }
 
                 // Add column headers at dataStartRow
                 columns.forEach((col, index) => {
@@ -210,14 +208,24 @@ router.get('/generate-excel', verifyToken, checkRole(['coordinator', 'admin']), 
 
                     row.getCell(colIndex++).value = item.title || 'N/A';
                     row.getCell(colIndex++).value = item.authors || 'N/A';
-                    if (!departmentId) {
-                        row.getCell(colIndex++).value = item.faculty?.department?.name || 'N/A';
-                    }
+                    row.getCell(colIndex++).value = item.faculty?.department?.name || 'N/A';
                     row.getCell(colIndex++).value = item.journalConference || 'N/A';
                     row.getCell(colIndex++).value = getYear(item.publicationDate);
                     row.getCell(colIndex++).value = item.issn || item.isbn || 'N/A';
 
+                    const linkValue = item.documentUrl || 'N/A';
+                    const cell = row.getCell(colIndex++);
+                    cell.value = linkValue;
+                    if (item.documentUrl) {
+                        cell.value = { text: 'View Document', hyperlink: item.documentUrl };
+                        cell.font = { underline: true, color: { argb: 'FF0000FF' } };
+                    }
+
                     row.eachCell((cell) => {
+                        // Apply border only (font/color handling for link is done above)
+                        if (!cell.font || !cell.font.color) { // Don't override link style if set
+                            // default style
+                        }
                         cell.border = {
                             top: { style: 'thin' },
                             left: { style: 'thin' },
@@ -509,6 +517,93 @@ router.get('/generate-excel', verifyToken, checkRole(['coordinator', 'admin']), 
 
 
 
+            case 'sports-achievements': {
+                const SportsAchievement = (await import('../models/SportsAchievement.js')).default;
+
+                // Build query
+                const sportsQuery = {};
+                // Filter by academic year if provided (matching year field in schema)
+                if (academicYear) {
+                    // Sports achievements use 'year' string field like "2023-24" or "2024"
+                    // If the format matches or is contained, we include it
+                    sportsQuery.year = { $regex: academicYear, $options: 'i' };
+                }
+
+                console.log('🔍 DEBUG sports-achievements query:');
+                console.log('  Query:', JSON.stringify(sportsQuery));
+
+                const achievements = await SportsAchievement.find(sportsQuery)
+                    .sort({ createdAt: -1 });
+
+                if (achievements.length === 0) {
+                    return res.status(404).json({ message: 'No sports achievements found for the selected criteria' });
+                }
+
+                const worksheet = workbook.addWorksheet('Sports Achievements');
+
+                // Add header
+                const dataStartRow = addExcelHeader(worksheet, 'Sports & Cultural Achievements Report');
+
+                // Define columns (6 standard columns)
+                const columns = [
+                    { header: 'Year', key: 'year', width: 15 },
+                    { header: 'Name of the Award/Medal', key: 'awardName', width: 40 },
+                    { header: 'Team / Individual', key: 'teamOrIndividual', width: 20 },
+                    { header: 'University/State/National/International', key: 'level', width: 35 },
+                    { header: 'Sports / Cultural', key: 'sportsOrCultural', width: 20 },
+                    { header: 'Name of the Student', key: 'studentName', width: 30 }
+                ];
+
+                // Add column headers
+                columns.forEach((col, index) => {
+                    const cell = worksheet.getCell(dataStartRow, index + 1);
+                    cell.value = col.header;
+                    cell.font = { bold: true, size: 11, color: { argb: 'FFFFFFFF' } };
+                    cell.fill = {
+                        type: 'pattern',
+                        pattern: 'solid',
+                        fgColor: { argb: 'FF4472C4' }
+                    };
+                    cell.alignment = { vertical: 'middle', horizontal: 'center' };
+                    cell.border = {
+                        top: { style: 'thin' },
+                        left: { style: 'thin' },
+                        bottom: { style: 'thin' },
+                        right: { style: 'thin' }
+                    };
+                    worksheet.getColumn(index + 1).width = col.width;
+                });
+
+                // Add data rows
+                let currentRow = dataStartRow + 1;
+                achievements.forEach((item) => {
+                    const row = worksheet.getRow(currentRow);
+                    let colIndex = 1;
+
+                    row.getCell(colIndex++).value = item.year || 'N/A';
+                    row.getCell(colIndex++).value = item.awardName || 'N/A';
+                    row.getCell(colIndex++).value = item.teamOrIndividual || 'N/A';
+                    row.getCell(colIndex++).value = item.level || 'N/A';
+                    // Format as: Activity(Category) -> e.g., Football(Sports)
+                    const activity = item.activityName ? `${item.activityName}(${item.sportsOrCultural})` : item.sportsOrCultural;
+                    row.getCell(colIndex++).value = activity || 'N/A';
+                    row.getCell(colIndex++).value = item.studentName || 'N/A';
+
+                    row.eachCell((cell) => {
+                        cell.border = {
+                            top: { style: 'thin' },
+                            left: { style: 'thin' },
+                            bottom: { style: 'thin' },
+                            right: { style: 'thin' }
+                        };
+                        cell.alignment = { vertical: 'middle', wrapText: true };
+                    });
+                    currentRow++;
+                });
+
+                break;
+            }
+
             case 'student-achievements': {
                 const achieveQuery = { ...deptQuery, documentType: 'achievement' };
                 if (dateRange) achieveQuery.createdAt = dateRange;
@@ -707,7 +802,8 @@ router.get('/generate-excel', verifyToken, checkRole(['coordinator', 'admin']), 
             }
 
             default:
-                return res.status(400).json({ message: 'Invalid activity type for Excel export' });
+                console.log(`❌ Invalid activity type received: "${activityType}"`);
+                return res.status(400).json({ message: `Invalid activity type for Excel export: "${activityType}"` });
         }
 
         // Set response headers

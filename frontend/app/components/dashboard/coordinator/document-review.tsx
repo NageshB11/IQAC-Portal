@@ -122,18 +122,9 @@ export default function DocumentReview() {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-xl font-bold text-gray-900">Department Documents</h2>
-          <p className="text-gray-600 text-sm">Faculty & Student submissions | Pending: {pendingCount} | Total: {documents.length}</p>
+          <p className="text-gray-600 text-sm">Faculty & Student submissions | Total: {documents.length}</p>
         </div>
-        <select
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-        >
-          <option value="all">All Documents</option>
-          <option value="pending">Pending Review</option>
-          <option value="approved">Approved</option>
-          <option value="rejected">Rejected</option>
-        </select>
+
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -155,12 +146,7 @@ export default function DocumentReview() {
                       )}
                     </p>
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${doc.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                    doc.status === 'approved' ? 'bg-green-100 text-green-700' :
-                      'bg-red-100 text-red-700'
-                    }`}>
-                    {doc.status.toUpperCase()}
-                  </span>
+
                 </div>
                 <p className="text-sm text-gray-600 mb-3">
                   Type: <span className="capitalize font-medium">{doc.documentType}</span> | {new Date(doc.createdAt).toLocaleDateString()}

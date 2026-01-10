@@ -1,52 +1,109 @@
 'use client'
 
+import {
+  LayoutDashboard,
+  Users,
+  Building2,
+  ClipboardCheck,
+  Award,
+  Activity,
+  Bell,
+  PieChart,
+  FileBarChart,
+  FolderOpen
+} from 'lucide-react'
+
 interface AdminSidebarProps {
   activeTab: string
   setActiveTab: (tab: string) => void
 }
 
 export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarProps) {
-  const menuItems = [
-    { id: 'overview', icon: '📊', label: 'Dashboard' },
-    { id: 'users', icon: '👥', label: 'Users' },
-    { id: 'faculty-activities', icon: '📝', label: 'Faculty Activities' },
-    { id: 'student-activities', icon: '🏆', label: 'Student Activities' },
-    { id: 'documents', icon: '📄', label: 'Documents' },
-    { id: 'departments', icon: '🏢', label: 'Departments' },
-    { id: 'approvals', icon: '✓', label: 'Approvals' },
-    { id: 'announcements', icon: '📢', label: 'Announcements' },
-    { id: 'feedback', icon: '💬', label: 'Feedback Analytics' },
-    { id: 'reports', icon: '📊', label: 'Generate Report' },
-    { id: 'activity-logs', icon: '📋', label: 'Activity Logs' },
+  const menuGroups = [
+    {
+      label: 'Main',
+      items: [
+        { id: 'overview', icon: LayoutDashboard, label: 'Admin Dashboard' }
+      ]
+    },
+    {
+      label: 'Administration',
+      items: [
+        { id: 'departments', icon: Building2, label: 'Departments' },
+        { id: 'users', icon: Users, label: 'User Management' },
+      ]
+    },
+    {
+      label: 'Monitoring',
+      items: [
+        { id: 'faculty-activities', icon: ClipboardCheck, label: 'Faculty Activities' },
+        { id: 'student-activities', icon: Award, label: 'Student Activities' },
+        { id: 'sports', icon: Award, label: 'Sports Activities' },
+        { id: 'activity-logs', icon: Activity, label: 'Activity Logs' },
+      ]
+    },
+    {
+      label: 'Insights & System',
+      items: [
+        { id: 'announcements', icon: Bell, label: 'Announcements' },
+        { id: 'feedback', icon: PieChart, label: 'Feedback Analytics' },
+        { id: 'reports', icon: FileBarChart, label: 'Generate Reports' },
+        { id: 'documents', icon: FolderOpen, label: 'Documents' },
+      ]
+    }
   ]
 
   return (
-    <div className="w-64 bg-gray-900 text-white p-6 overflow-y-auto">
-      <div className="flex items-center gap-3 mb-8">
-        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-          <span className="text-white font-bold">IQ</span>
+    <div className="w-64 bg-slate-900 h-screen flex flex-col text-slate-100 shadow-xl border-r border-slate-800">
+      <div className="p-6 border-b border-slate-800 flex items-center gap-3 bg-slate-950/50">
+        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-900/20">
+          <span className="text-white font-bold text-lg">IQ</span>
         </div>
         <div>
-          <h1 className="text-xl font-bold">IQAC Portal</h1>
-          <p className="text-xs text-gray-400">Admin Panel</p>
+          <h1 className="text-lg font-bold tracking-tight text-white">IQAC Portal</h1>
+          <p className="text-xs text-slate-400 font-medium tracking-wide uppercase">Admin Panel</p>
         </div>
       </div>
 
-      <nav className="space-y-2">
-        {menuItems.map((item) => (
-          <button
-            key={item.id}
-            onClick={() => setActiveTab(item.id)}
-            className={`w-full text-left px-4 py-3 rounded-lg transition ${activeTab === item.id
-              ? 'bg-blue-600 text-white'
-              : 'text-gray-300 hover:bg-gray-800'
-              }`}
-          >
-            <span className="mr-3">{item.icon}</span>
-            {item.label}
-          </button>
+      <div className="flex-1 overflow-y-auto py-6 px-4 space-y-8 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
+        {menuGroups.map((group, groupIndex) => (
+          <div key={groupIndex}>
+            <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-3">
+              {group.label}
+            </h3>
+            <div className="space-y-1">
+              {group.items.map((item) => {
+                const Icon = item.icon
+                const isActive = activeTab === item.id
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id)}
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group relative
+                      ${isActive
+                        ? 'bg-blue-600 text-white shadow-md shadow-blue-900/20'
+                        : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                      }`}
+                  >
+                    <Icon className={`w-5 h-5 transition-colors ${isActive ? 'text-white' : 'text-slate-500 group-hover:text-white'}`} />
+                    <span>{item.label}</span>
+                    {isActive && (
+                      <div className="absolute right-2 w-1.5 h-1.5 rounded-full bg-white shadow-sm" />
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
         ))}
-      </nav>
+      </div>
+
+      <div className="p-4 border-t border-slate-800 bg-slate-950/30">
+        <div className="flex items-center gap-3 px-2 py-2">
+          <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+          <p className="text-xs text-slate-400">System Online</p>
+        </div>
+      </div>
     </div>
   )
 }

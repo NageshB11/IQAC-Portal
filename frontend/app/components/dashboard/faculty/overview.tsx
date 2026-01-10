@@ -120,12 +120,7 @@ export default function FacultyOverview() {
     },
   ]
 
-  const documentCards = [
-    { label: 'Total Documents', value: documentStats.total, icon: '📄', color: 'text-blue-600' },
-    { label: 'Pending', value: documentStats.pending, icon: '⏳', color: 'text-yellow-600' },
-    { label: 'Approved', value: documentStats.approved, icon: '✅', color: 'text-green-600' },
-    { label: 'Rejected', value: documentStats.rejected, icon: '❌', color: 'text-red-600' },
-  ]
+
 
   return (
     <div className="space-y-6">
@@ -161,19 +156,7 @@ export default function FacultyOverview() {
         </div>
       </div>
 
-      {/* Additional Stats */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-4">Document Statistics</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {documentCards.map((card, idx) => (
-            <div key={idx} className="text-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-              <div className={`text-3xl mb-2 ${card.color}`}>{card.icon}</div>
-              <p className="text-2xl font-bold text-gray-900">{card.value}</p>
-              <p className="text-xs text-gray-600 mt-1">{card.label}</p>
-            </div>
-          ))}
-        </div>
-      </div>
+
 
       {/* Two Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -208,17 +191,9 @@ export default function FacultyOverview() {
                 >
                   <p className="font-medium text-gray-900">{activity.title}</p>
                   <p className="text-sm text-gray-600 mt-1">{activity.journalConference}</p>
-                  <div className="flex items-center justify-between mt-2">
-                    <p className="text-xs text-gray-500">
-                      {new Date(activity.publicationDate).toLocaleDateString()}
-                    </p>
-                    <span className={`text-xs px-2 py-1 rounded-full ${activity.status === 'approved' ? 'bg-green-100 text-green-700' :
-                      activity.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                        'bg-red-100 text-red-700'
-                      }`}>
-                      {activity.status}
-                    </span>
-                  </div>
+                  <span className="text-xs text-gray-500">
+                    {new Date(activity.publicationDate).toLocaleDateString()}
+                  </span>
                 </div>
               ))}
             </div>

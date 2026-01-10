@@ -38,7 +38,23 @@ router.get('/all', verifyToken, async (req, res) => {
   try {
     const departments = await Department.find()
       .populate('coordinator', 'firstName lastName email');
-    res.json(departments);
+
+    const User = (await import('../models/User.js')).default;
+
+    const departmentsWithStats = await Promise.all(departments.map(async (dept) => {
+      const studentCount = await User.countDocuments({ department: dept._id, role: 'student' });
+      const facultyCount = await User.countDocuments({ department: dept._id, role: 'faculty' });
+
+      return {
+        ...dept.toObject(),
+        stats: {
+          students: studentCount,
+          faculty: facultyCount
+        }
+      };
+    }));
+
+    res.json(departmentsWithStats);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

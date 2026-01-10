@@ -141,64 +141,10 @@ export default function DocumentsManagement() {
                     </CardContent>
                 </Card>
 
-                <Card className="cursor-pointer hover:bg-gray-50" onClick={() => setFilter('pending')}>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Pending</CardTitle>
-                        <Clock className="h-4 w-4 text-yellow-600" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{stats.pending}</div>
-                    </CardContent>
-                </Card>
 
-                <Card className="cursor-pointer hover:bg-gray-50" onClick={() => setFilter('approved')}>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Approved</CardTitle>
-                        <CheckCircle className="h-4 w-4 text-green-600" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{stats.approved}</div>
-                    </CardContent>
-                </Card>
-
-                <Card className="cursor-pointer hover:bg-gray-50" onClick={() => setFilter('rejected')}>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Rejected</CardTitle>
-                        <XCircle className="h-4 w-4 text-red-600" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{stats.rejected}</div>
-                    </CardContent>
-                </Card>
             </div>
 
-            {/* Filter Buttons */}
-            <div className="flex gap-2">
-                <Button
-                    variant={filter === 'all' ? 'default' : 'outline'}
-                    onClick={() => setFilter('all')}
-                >
-                    All Documents
-                </Button>
-                <Button
-                    variant={filter === 'pending' ? 'default' : 'outline'}
-                    onClick={() => setFilter('pending')}
-                >
-                    Pending
-                </Button>
-                <Button
-                    variant={filter === 'approved' ? 'default' : 'outline'}
-                    onClick={() => setFilter('approved')}
-                >
-                    Approved
-                </Button>
-                <Button
-                    variant={filter === 'rejected' ? 'default' : 'outline'}
-                    onClick={() => setFilter('rejected')}
-                >
-                    Rejected
-                </Button>
-            </div>
+
 
             {/* Documents Table */}
             <Card>
@@ -227,7 +173,7 @@ export default function DocumentsManagement() {
                                         <TableHead>Uploaded By</TableHead>
                                         <TableHead>Department</TableHead>
                                         <TableHead>Date</TableHead>
-                                        <TableHead>Status</TableHead>
+
                                         <TableHead>Actions</TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -264,7 +210,7 @@ export default function DocumentsManagement() {
                                             <TableCell className="text-sm">
                                                 {formatDate(doc.createdAt)}
                                             </TableCell>
-                                            <TableCell>{getStatusBadge(doc.status)}</TableCell>
+
                                             <TableCell>
                                                 <DownloadButton
                                                     onDownload={() => downloadDocument(doc._id, doc.title)}

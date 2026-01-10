@@ -542,19 +542,33 @@ export default function DepartmentManagement() {
             <div
               key={dept._id}
               onClick={() => handleDepartmentClick(dept)}
-              className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-600 cursor-pointer hover:shadow-lg transition"
+              className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-600 cursor-pointer hover:shadow-lg transition flex flex-col h-full"
             >
-              <h3 className="text-lg font-bold text-gray-900">{dept.name}</h3>
-              <p className="text-sm text-gray-600 mb-3">Code: {dept.code}</p>
-              <p className="text-sm text-gray-700 mb-2">
-                Coordinator: {dept.coordinator ? `${dept.coordinator.firstName} ${dept.coordinator.lastName}` : 'Not Assigned'}
-              </p>
-              <p className="text-sm text-gray-500 mb-4">{dept.description}</p>
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-gray-900">{dept.name}</h3>
+                <p className="text-sm text-gray-600 mb-3">Code: {dept.code}</p>
+
+                {/* Badges */}
+                <div className="flex gap-2 mb-4">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    👨‍🏫 {dept.stats?.faculty || 0} Faculty
+                  </span>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                    🎓 {dept.stats?.students || 0} Students
+                  </span>
+                </div>
+
+                <p className="text-sm text-gray-700 mb-2">
+                  <span className="font-semibold">Coordinator:</span> {dept.coordinator ? `${dept.coordinator.firstName} ${dept.coordinator.lastName}` : 'Not Assigned'}
+                </p>
+                <p className="text-sm text-gray-500 mb-4 line-clamp-2">{dept.description}</p>
+              </div>
+
               <button
                 onClick={(e) => startEdit(dept, e)}
-                className="w-full px-3 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition text-sm"
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition text-sm font-medium"
               >
-                Edit
+                Edit Details
               </button>
             </div>
           ))

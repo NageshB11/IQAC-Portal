@@ -53,7 +53,15 @@ router.get('/my-feedback', verifyToken, checkRole(['student']), async (req, res)
 // Get all feedback (Admin, Coordinator)
 router.get('/all', verifyToken, checkRole(['admin', 'coordinator']), async (req, res) => {
   try {
-    const feedbacks = await Feedback.find().populate('studentId', 'firstName lastName email');
+    const feedbacks = await Feedback.find()
+      .populate({
+        path: 'studentId',
+        select: 'firstName lastName email department',
+        populate: {
+          path: 'department',
+          select: 'name'
+        }
+      });
     res.json(feedbacks);
   } catch (error) {
     res.status(500).json({ message: error.message });

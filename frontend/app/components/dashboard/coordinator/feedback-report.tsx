@@ -66,11 +66,16 @@ export default function FeedbackReport() {
   const getFilteredFeedback = () => {
     return feedback.filter((f) => {
       const searchLower = searchTerm.toLowerCase()
+      const subject = (f.subject || '').toLowerCase()
+      const comments = (f.comments || '').toLowerCase()
+      const firstName = (f.studentId?.firstName || '').toLowerCase()
+      const lastName = (f.studentId?.lastName || '').toLowerCase()
+
       return (
-        f.subject.toLowerCase().includes(searchLower) ||
-        f.comments.toLowerCase().includes(searchLower) ||
-        f.studentId?.firstName.toLowerCase().includes(searchLower) ||
-        f.studentId?.lastName.toLowerCase().includes(searchLower)
+        subject.includes(searchLower) ||
+        comments.includes(searchLower) ||
+        firstName.includes(searchLower) ||
+        lastName.includes(searchLower)
       )
     })
   }

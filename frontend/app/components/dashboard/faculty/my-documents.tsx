@@ -183,16 +183,7 @@ export default function MyDocuments() {
           <h2 className="text-xl font-bold text-gray-900">My Documents</h2>
           <p className="text-gray-600 text-sm">Track status of all uploaded documents</p>
         </div>
-        <select
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-        >
-          <option value="all">All Status</option>
-          <option value="pending">Pending</option>
-          <option value="approved">Approved</option>
-          <option value="rejected">Rejected</option>
-        </select>
+
       </div>
 
       {/* Edit Modal */}
@@ -275,12 +266,7 @@ export default function MyDocuments() {
                     Type: <span className="capitalize font-medium">{doc.type}</span>
                   </p>
                 </div>
-                <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${doc.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                  doc.status === 'approved' ? 'bg-green-100 text-green-700' :
-                    'bg-red-100 text-red-700'
-                  }`}>
-                  {doc.status.toUpperCase()}
-                </span>
+
               </div>
 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4 text-sm">

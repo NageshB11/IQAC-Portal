@@ -1,0 +1,14 @@
+✓ Connected to MongoDB
+
+--- DEBUG LOGIN ATTEMPT ---
+Testing Email: sports@iqac.edu
+Testing Password: sports123
+Testing Role: sports
+✓ User found in DB
+   User Role in DB: sports
+   User Password Hash in DB: $2a$10$Ese7RbziJ0OYHooW6fDw2OtmQmo32bGiQED818F6opmGq0PrL0.0O
+   Password Match: true
+
+✅ Password is correct in database.
+
+Disconnected from MongoDB

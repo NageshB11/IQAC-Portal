@@ -170,19 +170,7 @@ export default function StudentOverview() {
         ))}
       </div>
 
-      {/* Document Statistics */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-4">Document Statistics</h3>
-        <div className="grid grid-cols-3 gap-4">
-          {documentStats.map((stat, idx) => (
-            <div key={idx} className="text-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-              <div className={`text-3xl mb-2 ${stat.color}`}>{stat.icon}</div>
-              <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
-              <p className="text-xs text-gray-600 mt-1">{stat.label}</p>
-            </div>
-          ))}
-        </div>
-      </div>
+
 
       {/* Two Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -272,12 +260,7 @@ export default function StudentOverview() {
                         {new Date(achievement.createdAt).toLocaleDateString()}
                       </p>
                     </div>
-                    <span className={`text-xs px-2 py-1 rounded-full ml-2 ${achievement.status === 'approved' ? 'bg-green-100 text-green-700' :
-                        achievement.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                          'bg-red-100 text-red-700'
-                      }`}>
-                      {achievement.status}
-                    </span>
+
                   </div>
                 </div>
               ))}
@@ -318,8 +301,8 @@ export default function StudentOverview() {
                     </div>
                   </div>
                   <span className={`text-xs px-2 py-1 rounded-full ml-2 ${announcement.priority === 'high' ? 'bg-red-100 text-red-700' :
-                      announcement.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' :
-                        'bg-green-100 text-green-700'
+                    announcement.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' :
+                      'bg-green-100 text-green-700'
                     }`}>
                     {announcement.priority || 'normal'}
                   </span>

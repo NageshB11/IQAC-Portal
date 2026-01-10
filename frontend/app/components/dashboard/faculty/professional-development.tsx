@@ -142,7 +142,7 @@ export default function ProfessionalDevelopment() {
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-gray-900">FDP/STTP/Workshops Attended</h2>
+                <h2 className="text-2xl font-bold text-gray-900">Professional Development (FDP/STTP/Training)</h2>
                 <button
                     onClick={() => setShowForm(!showForm)}
                     className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
@@ -177,9 +177,6 @@ export default function ProfessionalDevelopment() {
                                 >
                                     <option value="fdp">FDP (Faculty Development Program)</option>
                                     <option value="sttp">STTP (Short Term Training Program)</option>
-                                    <option value="workshop">Workshop</option>
-                                    <option value="seminar">Seminar</option>
-                                    <option value="conference">Conference</option>
                                     <option value="training">Training</option>
                                 </select>
                             </div>
@@ -291,12 +288,7 @@ export default function ProfessionalDevelopment() {
                     activities.map((activity) => (
                         <div key={activity._id} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
                             <div className="flex justify-between items-start mb-3">
-                                <span className={`px-3 py-1 text-xs rounded-full ${activity.status === 'approved' ? 'bg-green-100 text-green-700' :
-                                        activity.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                                            'bg-red-100 text-red-700'
-                                    }`}>
-                                    {activity.status}
-                                </span>
+
                                 <span className="px-3 py-1 text-xs bg-purple-100 text-purple-700 rounded-full uppercase">
                                     {activity.type}
                                 </span>
