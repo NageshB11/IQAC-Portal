@@ -1,4 +1,0 @@
-Testing Login API at http://localhost:5000/api/auth/login
-Payload: {"email":"sports@iqac.edu","password":"sports123","role":"sports"}
-Status: 401
-Response: {"message":"Invalid credentials"}
